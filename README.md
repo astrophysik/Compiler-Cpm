@@ -13,11 +13,6 @@ The language also supports arithmetic operations "+" and "-" and assignment oper
   * String + Int/Float --> number is converted to string
   * String - Int/Float --> The string is converted to an integer or fractional number, and if the string is not numeric, then its value is 0 
   * Float (+, -) Int   --> Integer converted to fractional
-
-The input is one file in which all the code is written. Also compiler has several options:
-  * --help        --> Call help manual
-  * -c=<compiler> --> Specifies the compiler to process the translated code.
-  * -o <file>     --> Place the output into <file>
  
 Code example
 ```
@@ -56,5 +51,14 @@ Code example
   ------
 To start using the compiler, you need to clone repository and run script ***init_compiler.sh***. This generates a folder ***"/cpm"*** with a file ***"cpm.exe"*** inside. ***g++*** is used by default to compile source. You can change the compiler, but note that it must support versions from ***c++17***
   
+  Usage
+  -----
+cpm used similarly to gcc and others: **cpm.exe file [options]...**
+help manual
+Usage: Compiler.exe file [options]...
+Options:
+        --help          Display this information.
+        -cmp=<compiler> Use your <compiler>. Compiler must support version from c++17. Default value <compiler> is g++
+        -o <file>       Place the output into <file>  
  
  
