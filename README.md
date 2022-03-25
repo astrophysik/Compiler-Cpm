@@ -52,5 +52,9 @@ Code example
   Implementation
   --------------
   
+  launch
+  ------
+To start using the compiler, you need to clone repository and run script init_compiler.sh. This generates a folder "cpm" with a file "cpm.exe" inside. g++ is used by default to compile source. You can change the compiler, but note that it must support versions from c++17
+  
  
  
