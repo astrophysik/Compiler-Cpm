@@ -16,3 +16,8 @@ The input is one file in which all the code is written. Also compiler has severa
   * --help        --> Call help manual
   * -c=<compiler> --> Specifies the compiler to process the translated code.
   * -o <file>     --> Place the output into <file>
+ 
+Code example
+<var str = "Hello";
+ str = str + "!";
+ print(str);>
