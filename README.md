@@ -1,6 +1,8 @@
 # Compiler_Cpm
 
-# Task
+  Task
+  ====
+
 Let's introduce a new language called C+-. It consists of variables, constants, literals (string and numeric), print output function, input input function. 
 The language uses implicit dynamic typing: variables can store values of different types. There are 3 main types:
   * Int (8 bytes)
