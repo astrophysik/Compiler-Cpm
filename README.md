@@ -18,6 +18,8 @@ The input is one file in which all the code is written. Also compiler has severa
   * -o <file>     --> Place the output into <file>
  
 Code example
+```
    <var str = "Hello";
  str = str + "!";
  print(str);>
+```
