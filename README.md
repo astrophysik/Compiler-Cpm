@@ -53,12 +53,13 @@ To start using the compiler, you need to clone repository and run script ***init
   
   Usage
   -----
-cpm used similarly to gcc and others: **cpm.exe file [options]...**
-help manual
-Usage: Compiler.exe file [options]...
-Options:
-        --help          Display this information.
-        -cmp=<compiler> Use your <compiler>. Compiler must support version from c++17. Default value <compiler> is g++
-        -o <file>       Place the output into <file>  
- 
+cpm used similarly to gcc and others: *cpm.exe file [options]...*
+```
+  help manual
+  Usage: Compiler.exe file [options]...
+  Options:
+          --help          Display this information.
+          -cmp=<compiler> Use your <compiler>. Compiler must support version from c++17. Default value <compiler> is g++
+          -o <file>       Place the output into <file>  
+``` 
  
