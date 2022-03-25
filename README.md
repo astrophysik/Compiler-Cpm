@@ -27,3 +27,25 @@ Code example
  str = 21 + 2 + 18; // can be written to the same variable number 
  print(str) // -> 42
 ``` 
+```
+ val worldString = "World"; // the constant is set via val 
+ val answerNumber = 42;
+``` 
+```
+ print(worldString + answerNumber); // -> World42
+ print(worldString - answerNumber); // -> -42
+ 
+ val pi = 3.14;
+ print(pi + answerNumber); // 45.14
+``` 
+```
+ val numberString = "134";
+ print(numberString - answerNumber); // -> 92
+ print(numberString + answerNumber); // -> 13492
+```
+```
+ val name = input("Name: "); // outputs "Name: " and waits for input
+ print("Your name is " + name);
+``` 
+ 
+ 
