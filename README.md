@@ -19,7 +19,11 @@ The input is one file in which all the code is written. Also compiler has severa
  
 Code example
 ```
-   <var str = "Hello";
- str = str + "!";
- print(str);>
+ var str = "Hello"; // variable is set via var
+ str = str + "!"; // variable can be changed
+ print(str); // the print function takes one parameter
 ```
+```
+ str = 21 + 2 + 18; // can be written to the same variable number 
+ print(str) // -> 42
+``` 
