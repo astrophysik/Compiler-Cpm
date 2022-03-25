@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mkdir cpm
+
+g++ ./Compiler/compiler/main.cpp ./Compiler/AST/ast_nodes.cpp ./Compiler/helpers/char_source.cpp ./Compiler/compiler/lexer.cpp ./Compiler/compiler/parser.cpp ./Compiler/compiler/compiler.cpp -std=c++17 -o cpm/cpm
