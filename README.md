@@ -49,5 +49,8 @@ Code example
  val name = input("Name: "); // outputs "Name: " and waits for input
  print("Your name is " + name);
 ``` 
+  Implementation
+  --------------
+  
  
  
