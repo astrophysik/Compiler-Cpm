@@ -12,11 +12,28 @@ std::vector<token> lexer::get_tokens(const std::string &file_name) {
     return tokens;
 }
 
+
+
 void lexer::skip_white_space() {
     while (source.has_next()) {
         char ch = source.next();
-        if (ch != ' ' && ch != '\n' && ch != '\t') {
+        if (ch != '/' && ch != ' ' && ch != '\n' && ch != '\t') {
             source.back();
+            break;
+        }
+        if (ch == '/') {
+            skip_comment();
+        }
+    }
+}
+
+void lexer::skip_comment() {
+    char ch = source.next();
+    if (ch != '/') {
+        throw compile_exception("Unexpected symbol /");
+    }
+    while (source.has_next()) {
+        if (source.next() == '\n') {
             break;
         }
     }

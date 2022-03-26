@@ -5,7 +5,6 @@
 #include "parser.h"
 #include "../helpers/lib.h"
 
-//todo добавить комментарии
 //todo добавить многопоточность?
 class compiler {
     lexer lxr;

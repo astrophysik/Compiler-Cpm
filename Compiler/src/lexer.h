@@ -11,6 +11,8 @@
 class lexer {
     void skip_white_space();
 
+    void skip_comment();
+
     std::optional<token> next_token();
 
     std::map<std::string, token_type> token_type_list;
