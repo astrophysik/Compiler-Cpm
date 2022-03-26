@@ -14,10 +14,10 @@ int main(int argc, char * argv[]) {
         return 0;
     } else if (std::strcmp(argv[1], "--help") == 0) {
         std::cout << "help manual\n"
-                     "Usage: Compiler.exe file [options]...\n"
+                     "Usage: cpm.exe file [options]...\n"
                      "Options:\n"
                      "\t--help          Display this information.\n"
-                     "\t-cmp=<compiler> Use your <compiler>. Compiler must support version from c++17. Default value <compiler> is g++\n"
+                     "\t-cmp=<src> Use your <src>. Compiler must support version from c++17. Default value <src> is g++\n"
                      "\t-o <file>       Place the output into <file>";
         return 0;
     } else {
@@ -33,7 +33,8 @@ int main(int argc, char * argv[]) {
         }
     }
     if (output_file.empty()) {
-        output_file = argv[1];
+        size_t pos_dot = std::string(argv[1]).find(".");
+        output_file = std::string(argv[1]).substr(0, pos_dot != std::string::npos ? pos_dot : std::strlen(argv[1]));
     }
     try {
         std::map<std::string, token_type> token_type_list = {{"number", token_type("number", "[+-]?([0-9]*[.]?[0-9]+|[0-9]+[.]?[0-9]*)")},
