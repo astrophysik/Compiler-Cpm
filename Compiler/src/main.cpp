@@ -4,7 +4,6 @@
 
 #include "compiler.h"
 
-//todo Добавить опции
 int main(int argc, char * argv[]) {
     std::string cpp_compiler = "g++";
     std::string output_file;

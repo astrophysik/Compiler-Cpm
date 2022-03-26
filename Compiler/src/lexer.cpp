@@ -9,37 +9,51 @@ std::vector<token> lexer::get_tokens(const std::string &file_name) {
     for (auto item = next_token(); item.has_value(); item = next_token()) {
         tokens.push_back(item.value());
     }
+
     return tokens;
 }
 
-
+std::vector<std::string> lexer::get_errors() {
+    return errors;
+}
 
 void lexer::skip_white_space() {
     while (source.has_next()) {
         char ch = source.next();
-        if (ch != '/' && ch != ' ' && ch != '\n' && ch != '\t') {
+        if (ch != ' ' && ch != '\n' && ch != '\t') {
             source.back();
             break;
-        }
-        if (ch == '/') {
-            skip_comment();
         }
     }
 }
 
 void lexer::skip_comment() {
-    char ch = source.next();
-    if (ch != '/') {
-        throw compile_exception("Unexpected symbol /");
+    if (source.next() != '/') {
+        source.back();
+        return;
     }
-    while (source.has_next()) {
-        if (source.next() == '\n') {
-            break;
+    char ch = source.next();
+    if (ch == '/') {
+        go_to_enter();
+    } else {
+        size_t pos = source.lines_pos();
+        if (ch == '\n') {
+            pos--;
+        }
+        errors.emplace_back("\n" + std::to_string(pos) + " | One slash instead of two expected\n");
+        if (ch != '\n') {
+            go_to_enter();
         }
     }
 }
 
+void lexer::go_to_enter() {
+    while (source.has_next() && source.next() != '\n') {}
+}
+
 std::optional<token> lexer::next_token() {
+    skip_white_space();
+    skip_comment();
     skip_white_space();
     if (!source.has_next()) {
         return {};
@@ -71,7 +85,8 @@ std::optional<token> lexer::next_token() {
         return std::regex_match(current, type.second.regex);
     });
     if (it == token_type_list.end()) {
-        throw compile_exception("Invalid token at " + std::to_string(source.pos()));
+        errors.push_back("\n" + std::to_string(source.lines_pos()) + " | Invalid language token '" + current + "'\n");
+        return {token(";", token_type_list.at("semicolon"))};
     }
     return {token(current, it->second)};
 }

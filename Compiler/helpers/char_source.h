@@ -16,9 +16,11 @@ struct char_source {
 
     bool has_next();
 
-    size_t pos() const;
+    uint32_t char_pos();
+
+    uint32_t lines_pos();
 
 private:
-    long long position = 1;
+    uint32_t number_of_lines = 1;
     std::ifstream ifstream;
 };

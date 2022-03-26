@@ -5,7 +5,9 @@ char_source::char_source(const std::string &file_name) : ifstream(file_name) {}
 char char_source::next() {
     char ch;
     ifstream.get(ch);
-    position++;
+    if (ch == '\n') {
+        number_of_lines++;
+    }
     return ch;
 }
 
@@ -17,7 +19,6 @@ void char_source::open(const std::string &file_name) {
 }
 
 void char_source::back() {
-    position--;
     ifstream.unget();
 }
 
@@ -25,6 +26,10 @@ bool char_source::has_next() {
     return ifstream && ifstream.peek() != EOF;
 }
 
-size_t char_source::pos() const {
-    return position;
+uint32_t char_source::char_pos() {
+    return ifstream.tellg();
+}
+
+uint32_t char_source::lines_pos() {
+    return number_of_lines;
 }

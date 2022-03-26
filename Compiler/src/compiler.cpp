@@ -1,11 +1,17 @@
 #include "compiler.h"
 
-compiler::compiler(const std::map<std::string, token_type>& token_type_list,
-                   const std::set<char>& special_symbols, const std::map<std::string, uint16_t>& functions_arity)
+compiler::compiler(const std::map<std::string, token_type> &token_type_list,
+                   const std::set<char> &special_symbols, const std::map<std::string, uint16_t> &functions_arity)
     : lxr(token_type_list, special_symbols), prs(token_type_list, functions_arity) {}
 
-void compiler::compile(const std::string & input, const std::string & output, const std::string & cpp_compiler) {
+void compiler::compile(const std::string &input, const std::string &output, const std::string &cpp_compiler) {
     auto tokens = lxr.get_tokens(input);
+    auto errors = lxr.get_errors();
+    if (!errors.empty()) {
+        std::ostringstream os;
+        std::copy(errors.begin(), errors.end(), std::ostream_iterator<std::string>(os));
+        throw compile_exception(os.str());
+    }
     auto root = prs.parse(tokens);
     generate_cpp_code(root);
     run(output, cpp_compiler);
@@ -22,17 +28,17 @@ void compiler::generate_cpp_code(const std::shared_ptr<expression_node> &root) {
 }
 
 std::string compiler::command_translate(expression_node *node) {
-    if (auto * n = dynamic_cast<number_node *>(node)) {
+    if (auto *n = dynamic_cast<number_node *>(node)) {
         return n->number.value;
-    } else if (auto * v = dynamic_cast<variable_node *>(node)) {
+    } else if (auto *v = dynamic_cast<variable_node *>(node)) {
         return v->variable.value;
-    } else if (auto * s = dynamic_cast<string_node *>(node)) {
+    } else if (auto *s = dynamic_cast<string_node *>(node)) {
         return "std::string(" + s->string.value + ")";
-    } else if (auto * b = dynamic_cast<binary_operation_node *>(node)) {
+    } else if (auto *b = dynamic_cast<binary_operation_node *>(node)) {
         return command_translate(b->left.get()) + " " + b->op.value + " " + command_translate(b->right.get());
-    } else if (auto * u = dynamic_cast<unary_operation_node *>(node)) {
+    } else if (auto *u = dynamic_cast<unary_operation_node *>(node)) {
         return u->function.value + "(" + command_translate(u->arg.get()) + ")";
-    } else if (auto * sup = dynamic_cast<supplier *>(node)) {
+    } else if (auto *sup = dynamic_cast<supplier *>(node)) {
         return sup->function.value + "()";
     }
     throw compile_exception("Undefind pointer");
@@ -45,7 +51,7 @@ void compiler::write_header(std::ofstream &ofstream) {
 
 void compiler::write_source(std::ofstream &ofstream, const std::shared_ptr<expression_node> &root) {
     auto code = dynamic_cast<statement_node *>(root.get());
-    for (const auto& command : code->code_lines) {
+    for (const auto &command : code->code_lines) {
         auto cmd = '\t' + command_translate(command.get()) + ";\n";
         ofstream << cmd;
     }
