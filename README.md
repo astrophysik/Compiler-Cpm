@@ -54,7 +54,22 @@ In general, the work of the compiler is divided into 3 stages:
   * *Parser*
   Parser builds AST based on generated tokens from lexer and is responsible for its correctness
   * *Compiler*
-  Compiler runs lexer and parser. Getting from the last AST and generates c ++ code from it, which will be executed
+  Compiler runs lexer and parser. Getting from the last AST and generates c++ code from it, which will be executed
+  ```mermaid
+flowchart LR
+    direction TB
+    subgraph LexerWorker
+        direction LR
+        CharSource-->Lexer
+    end
+    subgraph ParserWorker
+        Parser
+    end
+    InputCode-->LexerWorker
+    LexerWorker-->Pipe-->ParserWorker
+    ParserWorker-->Compiler
+    Compiler-->OutputBinary
+```
   
   launch
   ------
