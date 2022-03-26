@@ -48,12 +48,12 @@ Code example
 ``` 
   Implementation
   --------------
-In general, the work of the compiler is divided into 3 stages
-  *lexer*
+In general, the work of the compiler is divided into 3 stages:
+  * *lexer*
   This class is responsible for splitting the text into correct language tokens. 
-  *Parser*
+  * *Parser*
   Parser builds AST based on generated tokens from lexer and is responsible for its correctness
-  *Compiler*
+  * *Compiler*
   Compiler runs lexer and parser. Getting from the last AST , generates c ++ code from it, which will be executed
   
   launch
