@@ -69,6 +69,7 @@ flowchart LR
     end
     InputCode-->LexerWorker
     LexerWorker-->Pipe-->ParserWorker
+    ParserWorker-->Pipe
     ParserWorker-->Compiler
     Compiler-->OutputBinary
 ```
