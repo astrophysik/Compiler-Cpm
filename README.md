@@ -14,7 +14,7 @@ The language also supports arithmetic operations "+" and "-" and assignment oper
   * String - Int/Float --> The string is converted to an integer or fractional number, and if the string is not numeric, then its value is 0 
   * Float (+, -) Int   --> Integer converted to fractional
 
-Also the language has support for comments. A comment is a line starting with // and ending with a newline
+Also the language has support for comments. A comment is a line starting with "//" and ending with a newline
  
 Code example
 ```
