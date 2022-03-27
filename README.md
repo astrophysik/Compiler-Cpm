@@ -49,14 +49,12 @@ Code example
   Implementation
   --------------
 In general, the work of the compiler is divided into 3 stages:
-  * *lexer*
-  This class is responsible for splitting the text into correct language tokens. 
-  * *Parser*
-  Parser builds AST based on generated tokens from lexer and is responsible for its correctness
-  * *Compiler*
-  Compiler runs lexer and parser. Getting from the last AST and generates c++ code from it, which will be executed
+  * *lexer* is responsible for splitting the text into correct language tokens. 
+  * *Parser* builds AST based on generated tokens from lexer and is responsible for its correctness.
+  * *Translator* is responsible for converting AST to C++ code.
+  * *Compiler* runs lexer, parser and translator.
   
-Lexer and Parser work in parallel. lexer put the received tokens of one command into a pipe. Parser takes ready-made tokens from there and adds in AST  
+*Lexer* and *Parser* work in ***parallel***. *Lexer* put the received tokens of one command into a *pipe*. *Parser* takes ready-made tokens from there and adds in *AST*. The finished *AST* is converted into c++ code using a *Translator*  
   
 Approximate scheme of work
   ```mermaid
