@@ -17,9 +17,9 @@ class lexer {
 
     std::optional<token> next_token();
 
-    std::map<std::string, token_type> token_type_list;
-    std::set<char> special_symbols;
-    char_source source;
+    std::map<std::string, token_type> _token_type_list;
+    std::set<char> _special_symbols;
+    char_source _source;
 
 public:
     lexer(std::map<std::string, token_type> tokens, std::set<char> symbols);

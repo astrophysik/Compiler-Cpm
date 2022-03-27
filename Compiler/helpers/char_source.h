@@ -21,6 +21,6 @@ struct char_source {
     uint32_t lines_pos();
 
 private:
-    uint32_t number_of_lines = 1;
-    std::ifstream ifstream;
+    uint32_t _number_of_lines = 1;
+    std::ifstream _ifstream;
 };

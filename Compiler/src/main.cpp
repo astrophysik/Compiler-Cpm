@@ -4,6 +4,9 @@
 
 #include "compiler.h"
 
+//todo добавить в lib int
+//todo проверить parse
+//todo добавить doc?
 int main(int argc, char * argv[]) {
     std::string cpp_compiler = "g++";
     std::string output_file;
@@ -16,7 +19,7 @@ int main(int argc, char * argv[]) {
                      "Usage: cpm.exe file [options]...\n"
                      "Options:\n"
                      "\t--help          Display this information.\n"
-                     "\t-cmp=<src> Use your <src>. Compiler must support version from c++17. Default value <src> is g++\n"
+                     "\t-cmp=<_src> Use your <_src>. Compiler must support version from c++17. Default value <_src> is g++\n"
                      "\t-o <file>       Place the output into <file>";
         return 0;
     } else {

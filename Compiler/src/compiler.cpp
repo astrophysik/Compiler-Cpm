@@ -20,7 +20,7 @@ void compiler::compile(const std::string &input, const std::string &output, cons
 
 void compiler::run(const std::string &output, const std::string &cpp_compiler) {
     system((cpp_compiler + std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + output).c_str());
-//    system((delete_file_command() + " temporary_cpp_code.cpp").c_str());
+    system((delete_file_command() + " temporary_cpp_code.cpp").c_str());
 }
 std::string compiler::delete_file_command() {
 #ifdef _WIN32
