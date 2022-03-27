@@ -72,7 +72,9 @@ flowchart LR
     ParserWorker-->Pipe
     Pipe-->LexerWorker
     ParserWorker-->Compiler
-    Compiler-->OutputBinary
+    Compiler-->TranslatedCppCode
+    CppCompiler-->OutputBinary
+    TranslatedCppCode-->OutputBinary
 ```
   
   launch
