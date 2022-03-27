@@ -48,6 +48,7 @@ Code example
 ``` 
   Implementation
   --------------
+  ### In general
 In general, the work of the compiler is divided into 3 stages:
   * *lexer* is responsible for splitting the text into correct language tokens. 
   * *Parser* builds AST based on generated tokens from lexer and is responsible for its correctness.
