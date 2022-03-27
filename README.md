@@ -58,7 +58,6 @@ In general, the work of the compiler is divided into 3 stages:
   
 Approximate scheme of work
   ```mermaid
-graph cmp
 flowchart LR
     direction TB
     subgraph LexerWorker
