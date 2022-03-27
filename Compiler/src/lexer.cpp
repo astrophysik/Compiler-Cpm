@@ -1,20 +1,21 @@
 #include "lexer.h"
 
 lexer::lexer(std::map<std::string, token_type> tokens, std::set<char> symbols)
-    : token_type_list(std::move(tokens)), special_symbols(std::move(symbols)) {}
+    : token_type_list(std::move(tokens)), special_symbols(std::move(symbols)){}
 
-std::vector<token> lexer::get_tokens(const std::string &file_name) {
+void lexer::open(const std::string &file_name) {
     source.open(file_name);
+}
+
+std::vector<token> lexer::next_command() {
     std::vector<token> tokens;
     for (auto item = next_token(); item.has_value(); item = next_token()) {
         tokens.push_back(item.value());
+        if (item->type == token_type_list.at("semicolon")) {
+            break;
+        }
     }
-
     return tokens;
-}
-
-std::vector<std::string> lexer::get_errors() {
-    return errors;
 }
 
 void lexer::skip_white_space() {
@@ -40,7 +41,7 @@ void lexer::skip_comment() {
         if (ch == '\n') {
             pos--;
         }
-        errors.emplace_back("\n" + std::to_string(pos) + " | One slash instead of two expected\n");
+        throw compile_exception("\n" + std::to_string(pos) + " | One slash instead of two expected\n");
         if (ch != '\n') {
             go_to_enter();
         }
@@ -85,8 +86,7 @@ std::optional<token> lexer::next_token() {
         return std::regex_match(current, type.second.regex);
     });
     if (it == token_type_list.end()) {
-        errors.push_back("\n" + std::to_string(source.lines_pos()) + " | Invalid language token '" + current + "'\n");
-        return {token(";", token_type_list.at("semicolon"))};
+        throw compile_exception("\n" + std::to_string(source.lines_pos()) + " | Invalid language token '" + current + "'\n");
     }
     return {token(current, it->second)};
 }

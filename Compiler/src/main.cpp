@@ -23,7 +23,7 @@ int main(int argc, char * argv[]) {
         for (int i = 2; i < argc; ++i) {
             if (argv[i][1] == 'c') {
                 cpp_compiler = std::string((argv[i] + 4), std::strlen(argv[i]));
-            } else if (argv[i][2] == 'o') {
+            } else if (argv[i][1] == 'o') {
                 output_file = std::string(argv[++i]);
             } else {
                 std::cout << std::string("unexpected option ") + argv[i];
@@ -32,8 +32,7 @@ int main(int argc, char * argv[]) {
         }
     }
     if (output_file.empty()) {
-        size_t pos_dot = std::string(argv[1]).find(".");
-        output_file = std::string(argv[1]).substr(0, pos_dot != std::string::npos ? pos_dot : std::strlen(argv[1]));
+        output_file = "output";
     }
     try {
         std::map<std::string, token_type> token_type_list = {{"number", token_type("number", "[+-]?([0-9]*[.]?[0-9]+|[0-9]+[.]?[0-9]*)")},

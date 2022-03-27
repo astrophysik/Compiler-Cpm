@@ -18,15 +18,13 @@ class lexer {
     std::optional<token> next_token();
 
     std::map<std::string, token_type> token_type_list;
-    char_source source;
     std::set<char> special_symbols;
-    std::vector<std::string> errors;
+    char_source source;
 
 public:
     lexer(std::map<std::string, token_type> tokens, std::set<char> symbols);
 
-    //todo Не заргужать в оперативку
-    std::vector<token> get_tokens(const std::string &file_name);
+    void open(const std::string & file_name);
 
-    std::vector<std::string> get_errors();
+    std::vector<token> next_command();
 };

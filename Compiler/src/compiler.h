@@ -1,28 +1,56 @@
 #pragma once
 
 #include <utility>
+#include <thread>
 
 #include "parser.h"
+#include "translator.h"
 #include "../helpers/lib.h"
+#include "../helpers/pipe.h"
 
 //todo добавить многопоточность?
 class compiler {
-    lexer lxr;
-    parser prs;
-
-    std::string command_translate(expression_node * node);
-
-    static void write_header(std::ofstream &ofstream);
-
-    void write_source(std::ofstream &ofstream, const std::shared_ptr<expression_node>& root);
-
-    static void write_tail(std::ofstream &ofstream);
-
-    void generate_cpp_code(const std::shared_ptr<expression_node>& root);
+    lexer _lxr;
+    parser _prs;
+    pipe<std::vector<token>> _pipe;
+    pipe<std::exception_ptr> _errors;
 
     inline static std::string delete_file_command();
 
-    void run(const std::string & output, const std::string & cpp_compiler);
+    static void run(const std::string & output, const std::string & cpp_compiler);
+
+    void lexer_thread() {
+        try {
+            auto tokens = _lxr.next_command();
+            while (!tokens.empty()) {
+                _pipe.push(tokens);
+                tokens = _lxr.next_command();
+            }
+            _pipe.push({});
+        } catch (compile_exception & e) {
+            _errors.push(std::current_exception());
+        }
+    }
+
+    void parser_thread(std::shared_ptr<statement_node> & root) {
+        try {
+            auto tokens = _pipe.pop();
+            while (!tokens.empty()) {
+                root->add_node(_prs.parse(tokens));
+                tokens = _pipe.pop();
+            }
+        } catch (compile_exception & e) {
+            _errors.push(std::current_exception());
+        }
+    }
+
+    void check_exception() {
+        if (!_errors.queue.empty()) {
+            auto e = _errors.queue.front();
+            _errors.queue.pop();
+            std::rethrow_exception(e);
+        }
+    }
 
 public:
     compiler(const std::map<std::string, token_type>& token_type_list,

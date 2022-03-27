@@ -5,10 +5,14 @@ parser::parser(std::map<std::string, token_type> types, std::map<std::string, ui
 
 std::shared_ptr<expression_node> parser::parse(std::vector<token> tokens) {
     src.open(std::move(tokens));
+    std::shared_ptr<expression_node> command = parse_expression();
+    require({token_type_list.at("semicolon")});
+    return command;
     std::shared_ptr<expression_node> root(new statement_node());
     while (src.has_next()) {
         std::shared_ptr<expression_node> command = parse_expression();
         require({token_type_list.at("semicolon")});
+        return command;
         dynamic_cast<statement_node *>(root.get())->add_node(command);
     }
     return root;
