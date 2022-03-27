@@ -8,7 +8,6 @@
 #include "../helpers/lib.h"
 #include "../helpers/pipe.h"
 
-//todo добавить многопоточность?
 class compiler {
     lexer _lxr;
     parser _prs;

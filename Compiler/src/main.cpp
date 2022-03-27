@@ -7,6 +7,7 @@
 //todo добавить в lib int
 //todo проверить parse
 //todo добавить doc?
+//todo заменить system
 int main(int argc, char * argv[]) {
     std::string cpp_compiler = "g++";
     std::string output_file;
