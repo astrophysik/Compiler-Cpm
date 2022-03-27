@@ -24,7 +24,7 @@ Code example
 ```
 ```
  str = 21 + 2 + 18; // can be written to the same variable number 
- print(str) // -> 42;
+ print(str); // -> 42
 ``` 
 ```
  val worldString = "World"; // the constant is set via val 
