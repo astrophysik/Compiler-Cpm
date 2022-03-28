@@ -1,7 +1,7 @@
 #include "lexer.h"
 
 lexer::lexer(std::map<std::string, token_type> tokens, std::set<char> symbols)
-    : _token_type_list(std::move(tokens)), _special_symbols(std::move(symbols)){}
+    : _token_type_list(std::move(tokens)), _special_symbols(std::move(symbols)) {}
 
 void lexer::open(const std::string &file_name) {
     _source.open(file_name);
@@ -79,7 +79,7 @@ std::optional<token> lexer::next_token() {
             current = {ch};
         }
     }
-    auto it = std::find_if(_token_type_list.begin(), _token_type_list.end(), [&current](const auto & type) {
+    auto it = std::find_if(_token_type_list.begin(), _token_type_list.end(), [&current](const auto &type) {
         return std::regex_match(current, type.second.regex);
     });
     if (it == _token_type_list.end()) {

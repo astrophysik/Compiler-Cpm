@@ -6,11 +6,11 @@
 
 struct char_source {
     char_source() = default;
-    char_source(const std::string& file_name);
+    char_source(const std::string &file_name);
 
     char next();
 
-    void open(const std::string& file_name);
+    void open(const std::string &file_name);
 
     void back();
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include <regex>
 #include <iostream>
+#include <regex>
+#include <string>
 
 
 struct token_type {
@@ -20,7 +20,7 @@ struct token_type {
         return lhs.name != rhs.name;
     }
 
-    friend std::ostream& operator<<(std::ostream &ostream, const token_type &rhs) {
+    friend std::ostream &operator<<(std::ostream &ostream, const token_type &rhs) {
         return ostream << rhs.name << " ";
     }
 };

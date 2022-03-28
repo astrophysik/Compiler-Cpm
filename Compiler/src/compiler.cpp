@@ -22,19 +22,19 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
 #ifdef _WIN32
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
-    ZeroMemory( &si, sizeof(si) );
+    ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
+    ZeroMemory(&pi, sizeof(pi));
     std::string cpp = cpp_compiler.substr(1, 1) + ":" + cpp_compiler.substr(2, cpp_compiler.size() - 2);
     std::replace(cpp.begin(), cpp.end(), '/', '\\');
     std::string cmdArgs = (cpp + (std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + "output"));
-    if (!CreateProcess(cpp.c_str(), cmdArgs.data(), 0, 0, 0, 0, 0, 0, &si, &pi )) {
+    if (!CreateProcess(cpp.c_str(), cmdArgs.data(), 0, 0, 0, 0, 0, 0, &si, &pi)) {
         DeleteFile("temporary_cpp_code.cpp");
         throw compile_exception("Failed to start c++ compiler");
     }
-    WaitForSingleObject( pi.hProcess, INFINITE );
-    CloseHandle( pi.hProcess );
-    CloseHandle( pi.hThread );
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
     DeleteFile("temporary_cpp_code.cpp");
 #elif __unix__
 #else
@@ -50,7 +50,7 @@ void compiler::lexer_thread() {
             tokens = _lxr.next_command();
         }
         _pipe.push({});
-    } catch (compile_exception & e) {
+    } catch (compile_exception &e) {
         _errors.push(std::current_exception());
     }
 }
@@ -62,7 +62,7 @@ void compiler::parser_thread(std::shared_ptr<statement_node> &root) {
             root->add_node(_prs.parse(tokens));
             tokens = _pipe.pop();
         }
-    } catch (compile_exception & e) {
+    } catch (compile_exception &e) {
         _errors.push(std::current_exception());
     }
 }

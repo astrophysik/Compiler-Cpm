@@ -24,7 +24,7 @@ class lexer {
 public:
     lexer(std::map<std::string, token_type> tokens, std::set<char> symbols);
 
-    void open(const std::string & file_name);
+    void open(const std::string &file_name);
 
     std::vector<token> next_command();
 };

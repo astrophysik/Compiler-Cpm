@@ -31,11 +31,11 @@ void translator::write_source(std::ofstream &ofstream, const std::shared_ptr<exp
     }
 }
 
-void translator::write_tail(std::ofstream &ofstream)  {
+void translator::write_tail(std::ofstream &ofstream) {
     ofstream << "\n\treturn 0;\n}";
 }
 
-void translator::generate_cpp_code(const std::shared_ptr<expression_node> &root, const std::string &lib)  {
+void translator::generate_cpp_code(const std::shared_ptr<expression_node> &root, const std::string &lib) {
     std::ofstream temp_file("temporary_cpp_code.cpp");
     if (!temp_file.is_open()) {
         throw compile_exception("Cannot create temporary file");

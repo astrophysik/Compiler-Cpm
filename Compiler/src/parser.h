@@ -2,8 +2,8 @@
 
 #include <utility>
 
-#include "lexer.h"
 #include "../AST/ast_nodes.h"
+#include "lexer.h"
 
 class parser {
     class token_buffer {
@@ -13,7 +13,7 @@ class parser {
     public:
         token_buffer() = default;
 
-        token_buffer(std::vector<token>  buf) : buffer(std::move(buf)), pos(0) {}
+        token_buffer(std::vector<token> buf) : buffer(std::move(buf)), pos(0) {}
 
         void open(std::vector<token> buf) {
             buffer = std::move(buf);
@@ -47,15 +47,15 @@ class parser {
     std::set<std::string> _const_variables;
     token_buffer _src;
 
-    std::optional<token> match(const std::vector<token_type> & expected);
+    std::optional<token> match(const std::vector<token_type> &expected);
 
-    token require(const std::vector<token_type> & expected);
+    token require(const std::vector<token_type> &expected);
 
-    void generate_exception(const std::vector<token_type> & expected);
+    void generate_exception(const std::vector<token_type> &expected);
 
     std::shared_ptr<expression_node> parse_expression();
 
-    std::shared_ptr<expression_node> parse_var_assign(const std::shared_ptr<expression_node>& variable_node);
+    std::shared_ptr<expression_node> parse_var_assign(const std::shared_ptr<expression_node> &variable_node);
 
     std::shared_ptr<expression_node> parse_formula_or_function();
 

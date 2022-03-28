@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "../helpers/token.h"
 
@@ -12,7 +12,7 @@ struct expression_node {
 struct statement_node : expression_node {
     std::vector<std::shared_ptr<expression_node>> code_lines;
 
-    void add_node(const std::shared_ptr<expression_node>& node);
+    void add_node(const std::shared_ptr<expression_node> &node);
 };
 
 struct variable_node : expression_node {
@@ -38,7 +38,7 @@ struct binary_operation_node : expression_node {
     std::shared_ptr<expression_node> left;
     std::shared_ptr<expression_node> right;
 
-    binary_operation_node(token op,std::shared_ptr<expression_node> lft,std::shared_ptr<expression_node> rht);
+    binary_operation_node(token op, std::shared_ptr<expression_node> lft, std::shared_ptr<expression_node> rht);
 };
 
 struct unary_operation_node : expression_node {

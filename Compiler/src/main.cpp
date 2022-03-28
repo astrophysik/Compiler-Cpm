@@ -1,12 +1,12 @@
-#include <iostream>
 #include <cstring>
+#include <iostream>
 #include <map>
 
 #include "compiler.h"
 
 //todo добавить в lib int
 //todo заменить system
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[]) {
     std::string cpp_compiler;
     std::string output_file;
     if (argc < 2) {

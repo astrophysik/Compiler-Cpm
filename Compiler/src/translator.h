@@ -15,6 +15,5 @@ class translator {
     static void write_tail(std::ofstream &ofstream);
 
 public:
-    static void generate_cpp_code(const std::shared_ptr<expression_node> &root, const std::string & lib);
+    static void generate_cpp_code(const std::shared_ptr<expression_node> &root, const std::string &lib);
 };
-

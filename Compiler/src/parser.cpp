@@ -34,7 +34,7 @@ std::shared_ptr<expression_node> parser::parse_expression() {
         } else if (_const_variables.find(var.value) != _const_variables.end()) {
             throw compile_exception("You cannot modify variable \"" + var.value + "\" because its was declared as const");
         } else {
-            throw compile_exception("You cannot use variable \"" + var.value +"\" before its declaration");
+            throw compile_exception("You cannot use variable \"" + var.value + "\" before its declaration");
         }
     } else {
         auto function_node = parse_formula_or_function();
@@ -60,7 +60,7 @@ std::shared_ptr<expression_node> parser::parse_formula_or_function() {
                 throw compile_exception("function " + current->value + " cannot start without args");
             }
         } else {
-            auto func =  std::shared_ptr<expression_node>(new unary_operation_node(current.value(), parse_formula()));
+            auto func = std::shared_ptr<expression_node>(new unary_operation_node(current.value(), parse_formula()));
             require({_token_type_list.at("rbracket")});
             return func;
         }
@@ -96,13 +96,12 @@ std::shared_ptr<expression_node> parser::parse_factor() {
         return std::shared_ptr<expression_node>(new number_node(current));
     } else if (current.type.name == "variable") {
         if (_used_variables.find(current.value) == _used_variables.end()) {
-            throw compile_exception("You cannot use variable \"" + current.value +"\" before its declaration");
+            throw compile_exception("You cannot use variable \"" + current.value + "\" before its declaration");
         }
         return std::shared_ptr<expression_node>(new variable_node(current));
     } else if (current.type.name == "string") {
         return std::shared_ptr<expression_node>(new string_node(current));
-    }
-    else {
+    } else {
         generate_exception({_token_type_list.at("number"), _token_type_list.at("string"), _token_type_list.at("variable")});
         return {};
     }
