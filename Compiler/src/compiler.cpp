@@ -20,20 +20,25 @@ void compiler::compile(const std::string &input, const std::string &output, cons
 
 void compiler::run(const std::string &output, const std::string &cpp_compiler) {
 #ifdef _WIN32
-    SHELLEXECUTEINFO ShExecInfo = {0};
-    ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-    ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-    ShExecInfo.hwnd = NULL;
-    ShExecInfo.lpVerb = NULL;
-    ShExecInfo.lpFile = cpp_compiler.c_str();
-    ShExecInfo.lpParameters = (std::string("temporary_cpp_code.cpp -std=c++17 -o ") + output).c_str();
-    ShExecInfo.lpDirectory = NULL;
-    ShExecInfo.nShow = SW_HIDE;
-    ShExecInfo.hInstApp = NULL;
-    ShellExecuteEx(&ShExecInfo);
-    WaitForSingleObject(ShExecInfo.hProcess,INFINITE);
-    DeleteFileA("temporary_cpp_code.cpp");
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+    std::string cpp = cpp_compiler.substr(1, 1) + ":" + cpp_compiler.substr(2, cpp_compiler.size() - 2);
+    std::replace(cpp.begin(), cpp.end(), '/', '\\');
+    std::string cmdArgs = (cpp + (std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + "output"));
+    if (!CreateProcess(cpp.c_str(), cmdArgs.data(), 0, 0, 0, 0, 0, 0, &si, &pi )) {
+        DeleteFile("temporary_cpp_code.cpp");
+        throw compile_exception("Failed to start c++ compiler");
+    }
+    WaitForSingleObject( pi.hProcess, INFINITE );
+    CloseHandle( pi.hProcess );
+    CloseHandle( pi.hThread );
+    DeleteFile("temporary_cpp_code.cpp");
+#elif __unix__
 #else
+    throw compile_exception("Your platform is unsupported. Now available Unix and Windows");
 #endif
 }
 

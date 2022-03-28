@@ -7,7 +7,7 @@
 //todo добавить в lib int
 //todo заменить system
 int main(int argc, char * argv[]) {
-    std::string cpp_compiler = "g++";
+    std::string cpp_compiler;
     std::string output_file;
     if (argc < 2) {
         std::cerr << "no input file\n"
@@ -18,7 +18,7 @@ int main(int argc, char * argv[]) {
                      "Usage: cpm.exe file [options]...\n"
                      "Options:\n"
                      "\t--help          Display this information.\n"
-                     "\t-cmp=<_src> Use your <_src>. Compiler must support version from c++17. Default value <_src> is g++\n"
+                     "\t-cmp=<src>      Use your <src>. Compiler must support version from c++17. Default value <src> is stored in details/cpp_compiler_path\n"
                      "\t-o <file>       Place the output into <file>";
         return 0;
     } else {
@@ -32,6 +32,10 @@ int main(int argc, char * argv[]) {
                 return 0;
             }
         }
+    }
+    if (cpp_compiler.empty()) {
+        std::ifstream ifstream("details\\cpp_compiler_path");
+        std::getline(ifstream, cpp_compiler);
     }
     if (output_file.empty()) {
         output_file = "output";
