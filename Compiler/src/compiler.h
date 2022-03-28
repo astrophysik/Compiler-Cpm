@@ -2,6 +2,11 @@
 
 #include <utility>
 #include <thread>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #include "parser.h"
 #include "translator.h"
@@ -14,43 +19,13 @@ class compiler {
     pipe<std::vector<token>> _pipe;
     pipe<std::exception_ptr> _errors;
 
-    inline static std::string delete_file_command();
-
     static void run(const std::string & output, const std::string & cpp_compiler);
 
-    void lexer_thread() {
-        try {
-            auto tokens = _lxr.next_command();
-            while (!tokens.empty()) {
-                _pipe.push(tokens);
-                tokens = _lxr.next_command();
-            }
-            _pipe.push({});
-        } catch (compile_exception & e) {
-            _errors.push(std::current_exception());
-        }
-    }
+    void lexer_thread();
 
-    void parser_thread(std::shared_ptr<statement_node> & root) {
-        try {
-            auto tokens = _pipe.pop();
-            while (!tokens.empty()) {
-                root->add_node(_prs.parse(tokens));
-                tokens = _pipe.pop();
-            }
-        } catch (compile_exception & e) {
-            _errors.push(std::current_exception());
-        }
-    }
+    void parser_thread(std::shared_ptr<statement_node> & root);
 
-    void check_exception() {
-        if (!_errors.queue.empty()) {
-            auto e = _errors.queue.front();
-            _errors.queue.pop();
-            std::rethrow_exception(e);
-        }
-    }
-
+    void check_exception();
 public:
     compiler(const std::map<std::string, token_type>& token_type_list,
              const std::set<char>& special_symbols, const std::map<std::string, uint16_t>& functions_arity);

@@ -42,9 +42,6 @@ void lexer::skip_comment() {
             pos--;
         }
         throw compile_exception("\n" + std::to_string(pos) + " | One slash instead of two expected\n");
-        if (ch != '\n') {
-            go_to_enter();
-        }
     }
 }
 
