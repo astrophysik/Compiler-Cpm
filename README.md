@@ -89,7 +89,7 @@ cpm used similarly to gcc and others: *cpm.exe file [options]...*
   Usage: cpm.exe file [options]...
   Options:
           --help          Display this information.
-          -cmp=<compiler> Use your <compiler>. Compiler must support version from c++17. Default value <compiler> is g++
-          -o <file>       Place the output into <file>  
+          -cmp=<src>      Use your <src>. Compiler must support version from c++17. Default value <src> is stored in details/cpp_compiler_path
+          -o <file>       Place the output into <file>
 ``` 
  
