@@ -79,7 +79,7 @@ flowchart LR
   
   launch
   ------
-To start using the compiler, you need to clone repository and run script ***init_compiler.sh***. This generates a folder ***"/cpm"*** with a file ***"cpm.exe"*** inside. ***g++*** is used by default to compile source. You can change the compiler, but note that it must support versions from ***c++17***
+To start using the compiler, you need to clone repository and run script ***initializer.sh***. This generates a folder ***"/cpm"*** with a file ***"cpm.exe"*** inside. Script tries to find the location of popular compilers. Note that it must support versions from ***c++17***
   
   Usage
   -----
