@@ -74,6 +74,7 @@ void compiler::lexer_thread() {
         _pipe.push({});
     } catch (compile_exception &e) {
         _errors.push(std::current_exception());
+        _pipe.push({});
     }
 }
 
