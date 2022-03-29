@@ -79,7 +79,13 @@ flowchart LR
   
   launch
   ------
-To start using the compiler, you need to clone repository and run script ***initializer.sh***. This generates a folder ***"/cpm"*** with a file ***"cpm.exe"*** inside. Script tries to find the location of popular compilers. Note that it must support versions from ***c++17***
+Installation instructions:
+```
+  git clone https://github.com/Ramzeeset/Compiler-Cpm
+  cd Compiler-Cpm/
+  bash initializer.sh
+```
+After that in the folder *cpm/* there will be an executable.
   
   Usage
   -----
