@@ -35,8 +35,30 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
     WaitForSingleObject(pi.hProcess, INFINITE);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
-    DeleteFile("temporary_cpp_code.cpp");
+    if (!DeleteFile("temporary_cpp_code.cpp")) {
+        std::cout << "Failed to delete temporary file\n";
+    }
 #elif __unix__
+    pid_t pid;
+    int status;
+    fflush(NULL);
+    pid = fork();
+    switch (pid) {
+        case -1:
+            throw compile_exception("Failed to start c++ compiler");
+            break;
+        case 0:
+            execl(cpp_compiler.c_str(), cpp_compiler.c_str(), "temporary_cpp_code.cpp", NULL);
+            break;
+        default:
+            if (waitpid(pid, &status, 0) != -1) {
+                printf("C++  exited with status %i\n", status);
+            }
+            break;
+    }
+    if (!std::remove("temporary_cpp_code.cpp")) {
+        std::cout << "Failed to delete temporary file\n";
+    }
 #else
     throw compile_exception("Your platform is unsupported. Now available Unix and Windows");
 #endif

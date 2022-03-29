@@ -2,11 +2,13 @@
 
 #include <thread>
 #include <utility>
+#include <unistd.h>
 #ifdef _WIN32
 #include <windows.h>
 #elif __unix__
 #include <unistd.h>
 #endif
+
 
 #include "../helpers/lib.h"
 #include "../helpers/pipe.h"
