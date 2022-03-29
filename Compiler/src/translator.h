@@ -4,6 +4,7 @@
 
 #include "../AST/ast_nodes.h"
 #include "../helpers/compile_exception.h"
+#include "../helpers/lib.h"
 
 class translator {
     static std::string command_translate(expression_node *node);

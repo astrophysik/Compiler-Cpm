@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 inline std::string LIB = "#include <algorithm>\n"
                          "#include <iostream>\n"
                          "#include <variant>\n"

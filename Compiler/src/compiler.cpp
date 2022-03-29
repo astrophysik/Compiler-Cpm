@@ -27,7 +27,7 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
     ZeroMemory(&pi, sizeof(pi));
     std::string cpp = cpp_compiler.substr(1, 1) + ":" + cpp_compiler.substr(2, cpp_compiler.size() - 2);
     std::replace(cpp.begin(), cpp.end(), '/', '\\');
-    std::string cmdArgs = (cpp + (std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + "output"));
+    std::string cmdArgs = (cpp + (std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + output));
     if (!CreateProcess(cpp.c_str(), cmdArgs.data(), 0, 0, 0, 0, 0, 0, &si, &pi)) {
         DeleteFile("temporary_cpp_code.cpp");
         throw compile_exception("Failed to start c++ compiler");
@@ -48,7 +48,7 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
             throw compile_exception("Failed to start c++ compiler");
             break;
         case 0:
-            execl(cpp_compiler.c_str(), cpp_compiler.c_str(), "temporary_cpp_code.cpp", NULL);
+            execl(cpp_compiler.c_str(), cpp_compiler.c_str(), "temporary_cpp_code.cpp", "-o", output.c_str(), NULL);
             break;
         default:
             if (waitpid(pid, &status, 0) != -1) {

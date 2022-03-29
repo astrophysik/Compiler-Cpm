@@ -19,7 +19,8 @@ std::string translator::command_translate(expression_node *node) {
 }
 
 void translator::write_header(std::ofstream &ofstream, const std::string &lib) {
-    ofstream << lib << "\n";
+//#include "../helpers/mixed.h"
+    ofstream << LIB << "\n";
     ofstream << "int main() {\n";
 }
 
