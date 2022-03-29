@@ -56,7 +56,7 @@ The work of the compiler is divided into 3 stages:
   
 *Lexer* uses class ***CharSource*** as a wrapper over the input file. He and *Parser* work in ***parallel***. *Lexer* put the received tokens of one command into a ***pipe***. *Parser* takes ready-made tokens from there and adds in *AST*. The finished *AST* is converted into c++ code using a *Translator*. In order for the translated code to compile correctly, the ***mixed*** class is added to it. The description of which in the string type lies in the ***LIB*** constant. In case of an error in the code, the ***CompileException*** error is thrown.
   
-Approximate scheme of work
+Approximate scheme of class *Compiler*
   ```mermaid
 flowchart LR
     direction TB
