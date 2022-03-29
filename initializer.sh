@@ -59,5 +59,5 @@ then
 	mkdir cpm/details
 fi
 
-echo "${cmp}" >> cpm/details/cpp_compiler_path
+echo "${cmp}" > cpm/details/cpp_compiler_path
 

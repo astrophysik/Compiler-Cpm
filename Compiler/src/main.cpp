@@ -4,7 +4,6 @@
 
 #include "compiler.h"
 
-//todo добавить в lib int
 //todo Архитектура
 int main(int argc, char *argv[]) {
     std::string cpp_compiler;

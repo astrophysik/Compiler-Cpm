@@ -46,9 +46,11 @@ double operator-(double num, const std::string &str) {
 class mixed {
 
 public:
-    std::variant<double, std::string> storage;
+    std::variant<int, double, std::string> storage;
 
     mixed(std::string str) : storage(str) {}
+
+    mixed(int num) : storage(num) {}
 
     mixed(double num) : storage(num) {}
 
@@ -62,12 +64,19 @@ public:
         return *this;
     }
 
+    mixed &operator=(int num) {
+        storage = num;
+        return *this;
+    }
+
     mixed &operator=(const mixed &other) = default;
 
     template<typename T>
     friend mixed operator+(const mixed &lhs, T rhs) {
         if (std::holds_alternative<std::string>(lhs.storage)) {
             return std::get<std::string>(lhs.storage) + rhs;
+        } else if (std::holds_alternative<int>(lhs.storage)) {
+            return std::get<int>(lhs.storage) + rhs;
         } else {
             return std::get<double>(lhs.storage) + rhs;
         }
@@ -84,6 +93,8 @@ public:
     friend mixed operator+(const mixed &lhs, const mixed &rhs) {
         if (std::holds_alternative<std::string>(rhs.storage)) {
             return lhs + std::get<std::string>(rhs.storage);
+        } else if (std::holds_alternative<int>(rhs.storage)) {
+            return lhs + std::get<int>(rhs.storage);
         } else {
             return lhs + std::get<double>(rhs.storage);
         }
@@ -94,11 +105,17 @@ public:
         if constexpr (!std::is_same_v<std::string, T>) {
             if (std::holds_alternative<std::string>(lhs.storage)) {
                 return std::get<std::string>(lhs.storage) - rhs;
+            } else if (std::holds_alternative<int>(lhs.storage)) {
+                return std::get<int>(lhs.storage) - rhs;
             } else {
                 return std::get<double>(lhs.storage) - rhs;
             }
         } else {
-            return std::get<double>(lhs.storage) - rhs;
+            if (std::holds_alternative<int>(lhs.storage)) {
+                return std::get<int>(lhs.storage) - rhs;
+            } else {
+                return std::get<double>(lhs.storage) - rhs;
+            }
         }
     }
 
@@ -110,6 +127,8 @@ public:
     friend mixed operator-(const mixed &lhs, const mixed &rhs) {
         if (std::holds_alternative<std::string>(rhs.storage)) {
             return lhs - std::get<std::string>(rhs.storage);
+        } else if (std::holds_alternative<int>(rhs.storage)) {
+            return lhs - std::get<int>(rhs.storage);
         } else {
             return lhs - std::get<double>(rhs.storage);
         }
@@ -119,7 +138,9 @@ public:
 void print(const mixed &var) {
     if (std::holds_alternative<double>(var.storage)) {
         std::cout << std::get<double>(var.storage) << "\n";
-    } else {
+    } else if (std::holds_alternative<int>(var.storage)) {
+        std::cout << std::get<int>(var.storage) << "\n";
+    }else {
         std::cout << std::get<std::string>(var.storage) << "\n";
     }
 }
