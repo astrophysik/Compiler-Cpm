@@ -55,9 +55,9 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
                 printf("C++  exited with status %i\n", status);
             }
             break;
-    }
-    if (!std::remove("temporary_cpp_code.cpp")) {
-        std::cout << "Failed to delete temporary file\n";
+            if (!std::remove("temporary_cpp_code.cpp")) {
+                std::cout << "Failed to delete temporary file\n";
+            }
     }
 #else
     throw compile_exception("Your platform is unsupported. Now available Unix and Windows");
