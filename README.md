@@ -85,7 +85,7 @@ Installation instructions:
   cd Compiler-Cpm/
   bash initializer.sh
 ```
-After that in the folder *cpm/* there will be an executable.
+After that in the folder *cpm/* there will be an executable. The *initializer.sh* script will try to find popular compilers on your device and ask for confirmation of use or ask you to specify the path to the compiler
   
   Usage
   -----
