@@ -3,7 +3,7 @@
   description
   -----------
 
-Let's introduce a new language called C+-. It consists of variables, constants, literals (string and numeric), print output function and input function. 
+Let me introduce you new language called C+-. It consists of variables, constants, literals (string and numeric), print output function and input function. 
 The language uses implicit dynamic typing: variables can store values of different types. There are 3 main types:
   * Int (8 bytes)
   * String
@@ -24,7 +24,7 @@ Code example
 ```
 ```
  str = 21 + 2 + 18; // can be written to the same variable number 
- print(str); // -> 42
+ print(str); // -> 41
 ``` 
 ```
  val worldString = "World"; // the constant is set via val 
@@ -54,7 +54,7 @@ The work of the compiler is divided into 3 stages:
   * *Translator* is responsible for converting AST to C++ code.
   * *Compiler* runs lexer, parser and translator.
   
-*Lexer* uses class ***CharSource*** as a wrapper over the input file. He and *Parser* work in ***parallel***. *Lexer* put the received tokens of one command into a ***pipe***. *Parser* takes ready-made tokens from there and adds in *AST*. The finished *AST* is converted into c++ code using a *Translator*. In order for the translated code to compile correctly, the ***mixed*** class is added to it. The description of which in the string type lies in the ***LIB*** constant. In case of an error in the code, the ***CompileException*** error is thrown.
+*Lexer* uses class ***CharSource*** as a wrapper over the input file. It works in ***parallel*** with *Parser*. *Lexer* put the received tokens of one command into a ***pipe***. *Parser* takes ready-made tokens from there and adds in *AST*. The finished *AST* is converted into c++ code using a *Translator*. In order for the translated code to compile correctly, the ***mixed*** class is added to it. The description of which in the string type lies in the ***LIB*** constant. In case of an error in the code, the ***CompileException*** error is thrown.
   
 Approximate scheme of class *Compiler*
   ```mermaid
