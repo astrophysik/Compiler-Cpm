@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 cmp_path=""
 
 flag=$(type -p "gcc")
