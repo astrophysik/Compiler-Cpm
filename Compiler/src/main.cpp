@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     std::string output_file;
     if (argc < 2) {
         std::cerr << "no input file\n"
-                     "use --help for help manual";
+                     "use --help for help manual\n";
         return 0;
     } else if (std::strcmp(argv[1], "--help") == 0) {
         std::cout << "help manual\n"
@@ -34,7 +34,9 @@ int main(int argc, char *argv[]) {
         }
     }
     if (cpp_compiler.empty()) {
-        std::ifstream ifstream("details\\cpp_compiler_path");
+        std::string app = argv[0];
+        std::string(argv[0]).find_last_of(path_separator);
+        std::ifstream ifstream(app.substr(0, app.find_last_of(path_separator)) + path_separator + "details" + path_separator + "cpp_compiler_path");
         std::getline(ifstream, cpp_compiler);
     }
     if (output_file.empty()) {

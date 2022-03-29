@@ -2,6 +2,15 @@
 
 #include <string>
 
+inline std::string path_separator =
+#ifdef _WIN32
+        "\\";
+#elif __unix__
+        "/";
+#else
+        "";
+#endif
+
 inline std::string LIB = "#include <algorithm>\n"
                          "#include <iostream>\n"
                          "#include <variant>\n"
