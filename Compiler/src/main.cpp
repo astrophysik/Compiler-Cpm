@@ -4,8 +4,6 @@
 
 #include "compiler.h"
 
-//todo Архитектура
-//todo Написать скрипт для винды
 int main(int argc, char *argv[]) {
     std::string cpp_compiler;
     std::string output_file;
