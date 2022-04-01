@@ -54,7 +54,7 @@ std::optional<token> lexer::next_token() {
     skip_comment();
     skip_white_space();
     if (!_source.has_next()) {
-        return {};
+        return std::nullopt;
     }
     char ch = _source.next();
     bool is_string = ch == '\"';

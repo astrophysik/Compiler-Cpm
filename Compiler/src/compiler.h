@@ -1,8 +1,8 @@
 #pragma once
 
 #include <thread>
-#include <utility>
 #include <unistd.h>
+#include <utility>
 #ifdef _WIN32
 #include <windows.h>
 #elif __unix__

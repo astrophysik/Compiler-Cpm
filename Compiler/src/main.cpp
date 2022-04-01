@@ -5,6 +5,7 @@
 #include "compiler.h"
 
 //todo Архитектура
+//todo Написать скрипт для винды
 int main(int argc, char *argv[]) {
     std::string cpp_compiler;
     std::string output_file;
@@ -18,23 +19,22 @@ int main(int argc, char *argv[]) {
                      "Options:\n"
                      "\t--help          Display this information.\n"
                      "\t-cmp=<src>      Use your <src>. Compiler must support version from c++17. Default value <src> is stored in details/cpp_compiler_path\n"
-                     "\t-o <file>       Place the output into <file>";
+                     "\t-o <file>       Place the output into <file>\n";
         return 0;
     } else {
         for (int i = 2; i < argc; ++i) {
             if (argv[i][1] == 'c') {
-                cpp_compiler = std::string((argv[i] + 4), std::strlen(argv[i]));
+                cpp_compiler = std::string((argv[i] + 5));
             } else if (argv[i][1] == 'o') {
                 output_file = std::string(argv[++i]);
             } else {
-                std::cout << std::string("unexpected option ") + argv[i];
+                std::cerr << std::string("unexpected option ") + argv[i];
                 return 0;
             }
         }
     }
     if (cpp_compiler.empty()) {
         std::string app = argv[0];
-        std::string(argv[0]).find_last_of(path_separator);
         std::ifstream ifstream(app.substr(0, app.find_last_of(path_separator)) + path_separator + "details" + path_separator + "cpp_compiler_path");
         std::getline(ifstream, cpp_compiler);
     }

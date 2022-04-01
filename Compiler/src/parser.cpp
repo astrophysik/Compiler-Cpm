@@ -11,30 +11,28 @@ std::shared_ptr<expression_node> parser::parse(std::vector<token> tokens) {
 }
 
 std::shared_ptr<expression_node> parser::parse_expression() {
-    if (match({_token_type_list.at("modifier")})) {
-        _src.dec();
-        auto mod = match({_token_type_list.at("modifier")});
+    std::vector<token_type> expected = {_token_type_list.at("modifier"), _token_type_list.at("variable"), _token_type_list.at("function")};
+    auto current = require(expected);
+    if (current.type.name == "modifier") {
         token variable = require({_token_type_list.at("variable")});
         if (_used_variables.find(variable.value) != _used_variables.end()) {
             throw compile_exception("Multiply declaration of variable \"" + variable.value + "\"");
         }
         _used_variables.insert(variable.value);
-        if (mod->value == "val") {
+        if (current.value == "val") {
             _const_variables.insert(variable.value);
         }
-        variable.value = mod->value + " " + variable.value;
+        variable.value = current.value + " " + variable.value;
         return parse_var_assign(std::shared_ptr<expression_node>(new variable_node(variable)));
-    } else if (match({_token_type_list.at("variable")})) {
-        _src.dec();
-        token var = require({_token_type_list.at("variable")});
-        if (_used_variables.find(var.value) != _used_variables.end() &&
-            _const_variables.find(var.value) == _const_variables.end()) {
+    } else if (current.type.name == "variable") {
+        if (_used_variables.find(current.value) != _used_variables.end() &&
+            _const_variables.find(current.value) == _const_variables.end()) {
             _src.dec();
             return parse_var_assign(parse_factor());
-        } else if (_const_variables.find(var.value) != _const_variables.end()) {
-            throw compile_exception("You cannot modify variable \"" + var.value + "\" because its was declared as const");
+        } else if (_const_variables.find(current.value) != _const_variables.end()) {
+            throw compile_exception("You cannot modify variable \"" + current.value + "\" because its was declared as const");
         } else {
-            throw compile_exception("You cannot use variable \"" + var.value + "\" before its declaration");
+            throw compile_exception("You cannot use variable \"" + current.value + "\" before its declaration");
         }
     } else {
         auto function_node = parse_formula_or_function();
@@ -126,6 +124,7 @@ token parser::require(const std::vector<token_type> &expected) {
     }
     return current.value();
 }
+
 void parser::generate_exception(const std::vector<token_type> &expected) {
     std::string error_command;
     int64_t count = 0;

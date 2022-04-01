@@ -3,3 +3,4 @@
 /Compiler/cmake-build-debug
 /Compiler/.idea
 /cpm/*
+/.idea*

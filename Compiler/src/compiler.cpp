@@ -25,10 +25,8 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
-    std::string cpp = cpp_compiler.substr(1, 1) + ":" + cpp_compiler.substr(2, cpp_compiler.size() - 2);
-    std::replace(cpp.begin(), cpp.end(), '/', '\\');
-    std::string cmdArgs = (cpp + (std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + output));
-    if (!CreateProcess(cpp.c_str(), cmdArgs.data(), 0, 0, 0, 0, 0, 0, &si, &pi)) {
+    std::string cmdArgs = cpp_compiler + std::string(" temporary_cpp_code.cpp -std=c++17 -o ") + output;
+    if (!CreateProcess(cpp_compiler.c_str(), cmdArgs.data(), 0, 0, 0, 0, 0, 0, &si, &pi)) {
         DeleteFile("temporary_cpp_code.cpp");
         throw compile_exception("Failed to start c++ compiler");
     }
@@ -52,7 +50,7 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
             break;
         default:
             if (waitpid(pid, &status, 0) != -1) {
-                printf("C++  exited with status %i\n", status);
+                std::cout << "C++  exited with status " << status << "\n";
             }
             if (!std::remove("temporary_cpp_code.cpp")) {
                 std::cout << "Failed to delete temporary file\n";
