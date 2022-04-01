@@ -84,7 +84,7 @@ Installation instructions:
   git clone https://github.com/Ramzeeset/Compiler-Cpm
   cd Compiler-Cpm/
 ```
-If you are on the Windows platform. You should use the ***initializer.ps1*** script. If you are using linux, then ***initializer.sh***
+If you are on the Windows platform, you should use the ***initializer.ps1*** script. If you are using linux, then ***initializer.sh***
 
 After that in the folder *cpm/* there will be an executable. The initializer script will try to find popular compilers on your device and ask for confirmation of use or ask you to specify the path to the compiler
   
