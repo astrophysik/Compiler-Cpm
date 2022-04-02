@@ -84,7 +84,6 @@ Installation instructions:
   git clone https://github.com/Ramzeeset/Compiler-Cpm
   cd Compiler-Cpm/
 ```
-And use the appropriate script. <br />
 For ***Windows***
 ```
   initializer.ps1
