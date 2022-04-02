@@ -50,7 +50,9 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
             break;
         default:
             if (waitpid(pid, &status, 0) != -1) {
-                std::cout << "C++  exited with status " << status << "\n";
+                if (status != 0) {
+                    std::cout << "C++  exited with status " << status << "\n";
+                }
             }
             if (std::remove("temporary_cpp_code.cpp")) {
                 std::cout << "Failed to delete temporary file\n";

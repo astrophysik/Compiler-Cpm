@@ -48,7 +48,7 @@ else
 	mkdir cpm
 fi
 
-main_comp="${cmp} ./Compiler/src/main.cpp ./Compiler/AST/ast_nodes.cpp ./Compiler/helpers/char_source.cpp ./Compiler/src/lexer.cpp ./Compiler/src/parser.cpp ./Compiler/src/translator.cpp ./Compiler/src/compiler.cpp -std=c++17 -o cpm/cpm"
+main_comp="${cmp} -lpthread ./Compiler/src/main.cpp ./Compiler/AST/ast_nodes.cpp ./Compiler/helpers/char_source.cpp ./Compiler/src/lexer.cpp ./Compiler/src/parser.cpp ./Compiler/src/translator.cpp ./Compiler/src/compiler.cpp -std=c++17 -o cpm/cpm"
 
 $main_comp
 
