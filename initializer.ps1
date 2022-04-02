@@ -40,4 +40,4 @@ if (Test-Path -Path "cpm/details") {
     mkdir cpm/details > $null
 }
 
-$cpp_path > cpm/details/cpp_compiler_path
+Set-Content -Path cpm/details/cpp_compiler_path -Value $cpp_path
