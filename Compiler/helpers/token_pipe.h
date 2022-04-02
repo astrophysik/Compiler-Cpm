@@ -7,7 +7,7 @@
 #include "token.h"
 
 template<typename T>
-struct pipe {
+struct token_pipe {
     std::queue<T> queue;
     std::mutex m;
     std::condition_variable cv;

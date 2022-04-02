@@ -7,19 +7,21 @@
 #include <windows.h>
 #elif __unix__
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #endif
 
 
 #include "../helpers/lib.h"
-#include "../helpers/pipe.h"
+#include "../helpers/token_pipe.h"
 #include "parser.h"
 #include "translator.h"
 
 class compiler {
     lexer _lxr;
     parser _prs;
-    pipe<std::vector<token>> _pipe;
-    pipe<std::exception_ptr> _errors;
+    token_pipe<std::vector<token>> _pipe;
+    token_pipe<std::exception_ptr> _errors;
 
     static void run(const std::string &output, const std::string &cpp_compiler);
 
