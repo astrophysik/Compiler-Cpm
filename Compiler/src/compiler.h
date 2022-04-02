@@ -12,16 +12,16 @@
 #endif
 
 
+#include "../helpers/command_pipe.h"
 #include "../helpers/lib.h"
-#include "../helpers/token_pipe.h"
 #include "parser.h"
 #include "translator.h"
 
 class compiler {
     lexer _lxr;
     parser _prs;
-    token_pipe<std::vector<token>> _pipe;
-    token_pipe<std::exception_ptr> _errors;
+    command_pipe<std::vector<token>> _pipe;
+    command_pipe<std::exception_ptr> _errors;
 
     static void run(const std::string &output, const std::string &cpp_compiler);
 

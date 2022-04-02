@@ -46,7 +46,7 @@ void compiler::run(const std::string &output, const std::string &cpp_compiler) {
             throw compile_exception("Failed to start c++ compiler");
             break;
         case 0:
-            execl(cpp_compiler.c_str(), cpp_compiler.c_str(), "temporary_cpp_code.cpp", "-o", output.c_str(), NULL);
+            execl(cpp_compiler.c_str(), cpp_compiler.c_str(), "temporary_cpp_code.cpp", "-o", output.c_str(), "-std=c++17", NULL);
             break;
         default:
             if (waitpid(pid, &status, 0) != -1) {
