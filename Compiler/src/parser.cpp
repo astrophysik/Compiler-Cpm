@@ -35,6 +35,7 @@ std::shared_ptr<expression_node> parser::parse_expression() {
             throw compile_exception("You cannot use variable \"" + current.value + "\" before its declaration");
         }
     } else {
+        _src.dec();
         auto function_node = parse_formula_or_function();
         return function_node;
     }
