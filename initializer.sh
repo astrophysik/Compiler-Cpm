@@ -30,7 +30,7 @@ then
         read -p "Cannot find cpp compiler. Please specify the path to the executable compiler: " cmp
 else
 	confirm=""
-	cmp="${cmp_path}.exe"
+	cmp=$cmp_path
 	read -p "Compiler that was found '${cmp}' Use it? [y/n]: " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]
 	if [[ $confirm != [yY] && $confirm != [yY][eE][sS] ]];
 	then
