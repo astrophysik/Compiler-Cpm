@@ -15,7 +15,7 @@ std::string translator::command_translate(expression_node *node) {
     } else if (auto *sup = dynamic_cast<supplier *>(node)) {
         return sup->function.value + "()";
     }
-    throw compile_exception("Undefind pointer");
+    throw compile_exception("Undefined pointer");
 }
 
 void translator::write_header(std::ofstream &ofstream, const std::string &lib) {
