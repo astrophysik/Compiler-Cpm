@@ -84,7 +84,15 @@ Installation instructions:
   git clone https://github.com/Ramzeeset/Compiler-Cpm
   cd Compiler-Cpm/
 ```
-If you are on the Windows platform, you should use the ***initializer.ps1*** script. If you are using linux, then ***initializer.sh***
+And use the appropriate script. <br />
+For ***Windows***
+```
+  initializer.ps1
+```
+For ***Linux***
+```
+  initializer.sh
+```
 
 After that in the folder *cpm/* there will be an executable. The *initializer* script will try to find popular compilers on your device and ask for confirmation of use or ask you to specify the path to the compiler <br />
 [how to run powershell script](https://www.howto-outlook.com/howto/powershell-scripts-faq-tips-and-tricks.htm)
