@@ -40,7 +40,7 @@ Code example
 ```
  val numberString = "134";
  print(numberString - answerNumber); // -> 92
- print(numberString + answerNumber); // -> 13492
+ print(numberString + answerNumber); // -> 13442
 ```
 ```
  val name = input("Name: "); // outputs "Name: " and waits for input
