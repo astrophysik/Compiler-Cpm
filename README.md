@@ -94,7 +94,8 @@ For ***Linux***
 ```
 
 After that in the folder *cpm/* there will be an executable. The *initializer* script will try to find popular compilers on your device and ask for confirmation of use or ask you to specify the path to the compiler <br />
-[how to run powershell script](https://www.howto-outlook.com/howto/powershell-scripts-faq-tips-and-tricks.htm)
+
+If you have problems with powershell, then take a look [how to run powershell script](https://www.howto-outlook.com/howto/powershell-scripts-faq-tips-and-tricks.htm)
   
   Usage
   -----
