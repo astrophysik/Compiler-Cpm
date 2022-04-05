@@ -5,6 +5,8 @@ parser::parser(std::map<std::string, token_type> types, std::map<std::string, ui
 
 std::shared_ptr<expression_node> parser::parse(std::vector<token> tokens) {
     _src.open(std::move(tokens));
+    // Тут логичнее было бы вызывать функцию parse_statement, так как
+    // программа это не одно выражение, а их набор.
     std::shared_ptr<expression_node> command = parse_expression();
     require({_token_type_list.at("semicolon")});
     return command;
@@ -15,14 +17,23 @@ std::shared_ptr<expression_node> parser::parse_expression() {
     auto current = require(expected);
     if (current.type.name == "modifier") {
         token variable = require({_token_type_list.at("variable")});
+        // Кажется странным, что переменная называется _used_variables, а не,
+        // например, _defined_variables.
         if (_used_variables.find(variable.value) != _used_variables.end()) {
             throw compile_exception("Multiply declaration of variable \"" + variable.value + "\"");
         }
         _used_variables.insert(variable.value);
+        // Тут вероятно было бы лучше хранить флаг константности в переменной, а не хранить
+        // их отдельно.
         if (current.value == "val") {
             _const_variables.insert(variable.value);
         }
         variable.value = current.value + " " + variable.value;
+       // Мне кажется что выражение
+       // val hello = "World";
+       //
+       // Это не бинарное выражение присваивания, это объявление переменной
+       // поэтому это должен быть отдельный узел.
         return parse_var_assign(std::shared_ptr<expression_node>(new variable_node(variable)));
     } else if (current.type.name == "variable") {
         if (_used_variables.find(current.value) != _used_variables.end() &&
@@ -48,17 +59,24 @@ std::shared_ptr<expression_node> parser::parse_var_assign(const std::shared_ptr<
     return std::shared_ptr<expression_node>(new binary_operation_node(assignment, variable_node, right_formula));
 }
 
+// Судя по всему из-за того, что функция почему-то не считается частью формулы
+// невозможно написать выражение вида:
+//    input() + 100;
+// Что является валидным выражением, так как вызов функции в язык программирования
+// это выражение.
 std::shared_ptr<expression_node> parser::parse_formula_or_function() {
     auto current = match({_token_type_list.at("function")});
     if (current) {
         require({_token_type_list.at("lbracket")});
         if (match({_token_type_list.at("rbracket")})) {
             if (_operators_arity.at(current->value) == 0) {
+               // См. комментарий к supplier.
                 return std::shared_ptr<expression_node>(new supplier(current.value()));
             } else {
                 throw compile_exception("function " + current->value + " cannot start without args");
             }
         } else {
+           // См. комментарий к unary_operation_node.
             auto func = std::shared_ptr<expression_node>(new unary_operation_node(current.value(), parse_formula()));
             require({_token_type_list.at("rbracket")});
             return func;
@@ -138,5 +156,9 @@ void parser::generate_exception(const std::vector<token_type> &expected) {
     }
     std::ostringstream oss;
     std::copy(expected.begin(), expected.end(), std::ostream_iterator<token_type>(oss, "or "));
+
+    // Здесь немного не аккуратно сделано, поэтому появляются пробелы где не надо.
+    //   val numberString = input ( 20 ) expected semicolon
+    // Хранение позиций решило бы эту проблему.
     throw compile_exception("In command\n" + error_command + "expected " + oss.str().substr(0, oss.str().size() - 3));
 }

@@ -1,6 +1,10 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
+
+// В С++17 уже есть лучший способ
+constexpr char separator = std::filesystem::path::preferred_separator;
 
 inline std::string path_separator =
 #ifdef _WIN32
@@ -11,6 +15,10 @@ inline std::string path_separator =
         "";
 #endif
 
+// Это плохой путь.
+// В первую очередь это нечитаемо. Во вторых сложно редактировать.
+// Лучшим решением было бы поместить это в отдельный файл mixed.h
+// и инклюдить его в файл получаемый после трансляции С+- в С++.
 inline std::string LIB = "#include <algorithm>\n"
                          "#include <iostream>\n"
                          "#include <variant>\n"

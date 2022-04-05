@@ -12,6 +12,8 @@ int main(int argc, char *argv[]) {
                      "use --help for help manual\n";
         return 0;
     } else if (std::strcmp(argv[1], "--help") == 0) {
+       // За help отдельный респект!
+       // Можно еще вместо cpm.exe брать argv[0]
         std::cout << "help manual\n"
                      "Usage: cpm.exe file [options]...\n"
                      "Options:\n"
@@ -21,6 +23,7 @@ int main(int argc, char *argv[]) {
         return 0;
     } else {
         for (int i = 2; i < argc; ++i) {
+            // А вот тут косяк, получается я могу передать флаг -cxx и все будет работать.
             if (argv[i][1] == 'c') {
                 cpp_compiler = std::string((argv[i] + 5));
             } else if (argv[i][1] == 'o') {
@@ -40,6 +43,21 @@ int main(int argc, char *argv[]) {
         output_file = "output";
     }
     try {
+       // Идея с динамической мапой типов токенов интересная,
+       // но мне кажется что она только добавляет коду
+       // избыточности, например в строчке
+       // require({_token_type_list.at("lbracket")});
+       //
+       // Возможно лучшим решением было бы константное
+       // перечисление всех возможных типов и для них
+       // уже регулярки для парсинга, тогда строчка
+       // выше была бы гораздо понятнее:
+       // require(TokenType::LPAR);
+       //
+       // Так же твое решение вроде как претендует на производительность
+       // судя по тому, как ты распараллелил лексер и парсер, однако
+       // в том же лексере у тебя повсеместные сравнения со строками
+       // которые намного медленней варианта с перечислением.
         std::map<std::string, token_type> token_type_list = {{"number", token_type("number", "[+-]?([0-9]*[.]?[0-9]+|[0-9]+[.]?[0-9]*)")},
                                                              {"string", token_type("string", R"("[^"]*")")},
                                                              {"variable", token_type("variable", "^[a-zA-Z_$][a-zA-Z_$0-9]*$")},
