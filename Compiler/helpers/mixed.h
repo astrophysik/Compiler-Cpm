@@ -3,6 +3,8 @@
 #include <variant>
 #include <cassert>
 
+// Как я понимаю для разработки использовался как раз этот класс
+// и уже после он был скопирован в lib.h, смотри комментарий там.
 class mixed {
 public:
     std::variant<int, double, std::string> storage;

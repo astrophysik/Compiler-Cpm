@@ -9,6 +9,9 @@ struct token_type {
     std::string name;
     std::regex regex;
 
+    // Довольно странно, что здесь одно передается по константной ссылке, а другое
+    // по значение, которое потом перемещается. Судя по использованию везде передаются
+    // просто константные строки.
     token_type(std::string _name, const std::string &_regex)
         : name(std::move(_name)), regex(_regex) {}
 

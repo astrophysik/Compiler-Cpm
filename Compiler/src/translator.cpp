@@ -9,7 +9,8 @@ std::string translator::command_translate(expression_node *node) {
     } else if (auto *s = dynamic_cast<string_node *>(node)) {
         return "std::string(" + s->string.value + ")";
     } else if (auto *b = dynamic_cast<binary_operation_node *>(node)) {
-        return "(" + command_translate(b->left.get()) + " " + b->op.value + " " + command_translate(b->right.get()) + ")";
+       // Тут как мы и обсуждали я убрал скобки
+        return command_translate(b->left.get()) + " " + b->op.value + " " + command_translate(b->right.get());
     } else if (auto *u = dynamic_cast<unary_operation_node *>(node)) {
         return u->function.value + "(" + command_translate(u->arg.get()) + ")";
     } else if (auto *sup = dynamic_cast<supplier *>(node)) {

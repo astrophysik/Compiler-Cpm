@@ -2,6 +2,8 @@
 
 #include <optional>
 #include <set>
+// Кажется тут был потеряна библиотека, без нее как минимум у меня падал линкер
+#include <map>
 #include <utility>
 
 #include "../helpers/char_source.h"
