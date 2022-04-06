@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
             if (argv[i][0] != '-') {
                 std::cerr << std::string("unexpected name ") + argv[i];
                 return 0;
-            } else if (strlen(argv[i]) > 5 && argv[i][1] == 'c' && argv[i][2] == 'm' && argv[i][3] == 'p'&& argv[i][4] == '=') {
+            } else if (strlen(argv[i]) > 5 && argv[i][1] == 'c' && argv[i][2] == 'm' && argv[i][3] == 'p' && argv[i][4] == '=') {
                 cpp_compiler = std::string((argv[i] + 5));
             } else if (strlen(argv[i]) > 1 && argv[i][1] == 'o') {
                 output_file = std::string(argv[++i]);

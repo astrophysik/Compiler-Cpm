@@ -15,17 +15,10 @@ std::shared_ptr<expression_node> parser::parse_expression() {
     auto current = require(expected);
     if (current.type.name == "modifier") {
         token variable = require({_token_type_list.at("variable")});
-        // Кажется странным, что переменная называется _used_variables, а не,
-        // например, _defined_variables.
-        if (_used_variables.find(variable.value) != _used_variables.end()) {
+        if (_defined_variables.find(variable.value) != _defined_variables.end()) {
             throw compile_exception("Multiply declaration of variable \"" + variable.value + "\"");
         }
-        _used_variables.insert(variable.value);
-        // Тут вероятно было бы лучше хранить флаг константности в переменной, а не хранить
-        // их отдельно.
-        if (current.value == "val") {
-            _const_variables.insert(variable.value);
-        }
+        _defined_variables.insert({variable.value, current.value == "val"});
         variable.value = current.value + " " + variable.value;
        // Мне кажется что выражение
        // val hello = "World";
@@ -34,11 +27,11 @@ std::shared_ptr<expression_node> parser::parse_expression() {
        // поэтому это должен быть отдельный узел.
         return parse_var_assign(std::shared_ptr<expression_node>(new variable_node(variable)));
     } else if (current.type.name == "variable") {
-        if (_used_variables.find(current.value) != _used_variables.end() &&
-            _const_variables.find(current.value) == _const_variables.end()) {
+        if (_defined_variables.find(current.value) != _defined_variables.end() &&
+            !_defined_variables.at(current.value)) {
             _src.dec();
             return parse_var_assign(parse_factor());
-        } else if (_const_variables.find(current.value) != _const_variables.end()) {
+        } else if (!_defined_variables.at(current.value)) {
             throw compile_exception("You cannot modify variable \"" + current.value + "\" because its was declared as const");
         } else {
             throw compile_exception("You cannot use variable \"" + current.value + "\" before its declaration");
@@ -109,7 +102,7 @@ std::shared_ptr<expression_node> parser::parse_factor() {
     if (current.type.name == "number") {
         return std::shared_ptr<expression_node>(new number_node(current));
     } else if (current.type.name == "variable") {
-        if (_used_variables.find(current.value) == _used_variables.end()) {
+        if (_defined_variables.find(current.value) == _defined_variables.end()) {
             throw compile_exception("You cannot use variable \"" + current.value + "\" before its declaration");
         }
         return std::shared_ptr<expression_node>(new variable_node(current));

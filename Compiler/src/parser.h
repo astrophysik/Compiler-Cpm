@@ -43,8 +43,7 @@ class parser {
 
     std::map<std::string, token_type> _token_type_list;
     std::map<std::string, uint16_t> _operators_arity;
-    std::set<std::string> _used_variables;
-    std::set<std::string> _const_variables;
+    std::map<std::string, bool> _defined_variables;
     token_buffer _src;
 
     std::optional<token> match(const std::vector<token_type> &expected);

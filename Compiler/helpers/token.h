@@ -9,11 +9,8 @@ struct token_type {
     std::string name;
     std::regex regex;
 
-    // Довольно странно, что здесь одно передается по константной ссылке, а другое
-    // по значение, которое потом перемещается. Судя по использованию везде передаются
-    // просто константные строки.
-    token_type(std::string _name, const std::string &_regex)
-        : name(std::move(_name)), regex(_regex) {}
+    token_type(const std::string & _name, const std::string &_regex)
+        : name(_name), regex(_regex) {}
 
     friend bool operator==(const token_type &lhs, const token_type &rhs) {
         return lhs.name == rhs.name;
