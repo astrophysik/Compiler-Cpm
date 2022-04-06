@@ -2,19 +2,13 @@ $cpp_path = ""
 
 $oldPreference = $ErrorActionPreference
 $ErrorActionPreference = 'stop'
-try{if(Get-Command gcc){$cpp_path = (Get-Command gcc).Path}}
+try{if(Get-Command g++){$cpp_path = (Get-Command g++).Path}}
 Catch {}
 Finally {$ErrorActionPreference=$oldPreference}
 
 $oldPreference = $ErrorActionPreference
 $ErrorActionPreference = 'stop'
-try{if(Get-Command gcc){$cpp_path = (Get-Command g++).Path}}
-Catch {}
-Finally {$ErrorActionPreference=$oldPreference}
-
-$oldPreference = $ErrorActionPreference
-$ErrorActionPreference = 'stop'
-try{if(Get-Command gcc){$cpp_path = (Get-Command clang).Path}}
+try{if(Get-Command clang++){$cpp_path = (Get-Command clang++).Path}}
 Catch {}
 Finally {$ErrorActionPreference=$oldPreference}
 
@@ -33,7 +27,7 @@ if (Test-Path -Path "cpm") {
     mkdir cpm > $null
 }
 
-& $cpp_path ./Compiler/src/main.cpp ./Compiler/AST/ast_nodes.cpp ./Compiler/helpers/char_source.cpp ./Compiler/src/lexer.cpp ./Compiler/src/parser.cpp ./Compiler/src/translator.cpp ./Compiler/src/compiler.cpp -std=c++17 -o cpm/cpm > $null
+& $cpp_path ./Compiler/src/main.cpp ./Compiler/AST/ast_nodes.cpp ./Compiler/helpers/char_source.cpp ./Compiler/src/lexer.cpp ./Compiler/src/parser.cpp ./Compiler/src/translator.cpp ./Compiler/src/compiler.cpp -lpthread -std=c++17 -o cpm/cpm > $null
 
 if (Test-Path -Path "cpm/details") {
 } else {

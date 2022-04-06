@@ -12,10 +12,8 @@ int main(int argc, char *argv[]) {
                      "use --help for help manual\n";
         return 0;
     } else if (std::strcmp(argv[1], "--help") == 0) {
-       // За help отдельный респект!
-       // Можно еще вместо cpm.exe брать argv[0]
         std::cout << "help manual\n"
-                     "Usage: cpm.exe file [options]...\n"
+                     "Usage: " + std::string(argv[0]) + " file [options]...\n"
                      "Options:\n"
                      "\t--help          Display this information.\n"
                      "\t-cmp=<src>      Use your <src>. Compiler must support version from c++17. Default value <src> is stored in details/cpp_compiler_path\n"
@@ -23,10 +21,12 @@ int main(int argc, char *argv[]) {
         return 0;
     } else {
         for (int i = 2; i < argc; ++i) {
-            // А вот тут косяк, получается я могу передать флаг -cxx и все будет работать.
-            if (argv[i][1] == 'c') {
+            if (argv[i][0] != '-') {
+                std::cerr << std::string("unexpected name ") + argv[i];
+                return 0;
+            } else if (strlen(argv[i]) > 5 && argv[i][1] == 'c' && argv[i][2] == 'm' && argv[i][3] == 'p'&& argv[i][4] == '=') {
                 cpp_compiler = std::string((argv[i] + 5));
-            } else if (argv[i][1] == 'o') {
+            } else if (strlen(argv[i]) > 1 && argv[i][1] == 'o') {
                 output_file = std::string(argv[++i]);
             } else {
                 std::cerr << std::string("unexpected option ") + argv[i];

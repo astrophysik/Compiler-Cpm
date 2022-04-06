@@ -3,10 +3,8 @@
 parser::parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity)
     : _token_type_list(std::move(types)), _operators_arity(std::move(arity)) {}
 
-std::shared_ptr<expression_node> parser::parse(std::vector<token> tokens) {
+std::shared_ptr<expression_node> parser::parse_statement(std::vector<token> tokens) {
     _src.open(std::move(tokens));
-    // Тут логичнее было бы вызывать функцию parse_statement, так как
-    // программа это не одно выражение, а их набор.
     std::shared_ptr<expression_node> command = parse_expression();
     require({_token_type_list.at("semicolon")});
     return command;
@@ -67,23 +65,22 @@ std::shared_ptr<expression_node> parser::parse_var_assign(const std::shared_ptr<
 std::shared_ptr<expression_node> parser::parse_formula_or_function() {
     auto current = match({_token_type_list.at("function")});
     if (current) {
-        require({_token_type_list.at("lbracket")});
-        if (match({_token_type_list.at("rbracket")})) {
-            if (_operators_arity.at(current->value) == 0) {
-               // См. комментарий к supplier.
-                return std::shared_ptr<expression_node>(new supplier(current.value()));
-            } else {
-                throw compile_exception("function " + current->value + " cannot start without args");
-            }
-        } else {
-           // См. комментарий к unary_operation_node.
-            auto func = std::shared_ptr<expression_node>(new unary_operation_node(current.value(), parse_formula()));
-            require({_token_type_list.at("rbracket")});
-            return func;
-        }
+        return std::shared_ptr<expression_node>(new function_call(current.value(), parse_function_args(current.value())));
     } else {
         return parse_formula();
     }
+}
+
+std::vector<std::shared_ptr<expression_node>> parser::parse_function_args(const token & function) {
+    require({_token_type_list.at("lbracket")});
+    std::vector<std::shared_ptr<expression_node>> args;
+    while (!match({_token_type_list.at("rbracket")})) {
+        args.push_back(parse_formula());
+    }
+    if (_operators_arity.at(function.value) > args.size()) {
+        throw compile_exception("Wrong count of arguments for function '" + function.value + "'");
+    }
+    return args;
 }
 
 std::shared_ptr<expression_node> parser::parse_brackets() {

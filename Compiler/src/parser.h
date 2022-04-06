@@ -59,6 +59,8 @@ class parser {
 
     std::shared_ptr<expression_node> parse_formula_or_function();
 
+    std::vector<std::shared_ptr<expression_node>> parse_function_args(const token & function);
+
     std::shared_ptr<expression_node> parse_brackets();
 
     std::shared_ptr<expression_node> parse_formula();
@@ -68,5 +70,5 @@ class parser {
 public:
     parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity);
 
-    std::shared_ptr<expression_node> parse(std::vector<token> tokens);
+    std::shared_ptr<expression_node> parse_statement(std::vector<token> tokens);
 };
