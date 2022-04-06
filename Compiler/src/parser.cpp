@@ -1,7 +1,7 @@
 #include "parser.h"
 
-parser::parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity)
-    : _token_type_list(std::move(types)), _operators_arity(std::move(arity)) {}
+parser::parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity, std::map<std::string, bool> function_value)
+    : _token_type_list(std::move(types)), _operators_arity(std::move(arity)), _function_value(std::move(function_value)) {}
 
 std::shared_ptr<expression_node> parser::parse_statement(std::vector<token> tokens) {
     _src.open(std::move(tokens));
@@ -19,13 +19,8 @@ std::shared_ptr<expression_node> parser::parse_expression() {
             throw compile_exception("Multiply declaration of variable \"" + variable.value + "\"");
         }
         _defined_variables.insert({variable.value, current.value == "val"});
-        variable.value = current.value + " " + variable.value;
-       // Мне кажется что выражение
-       // val hello = "World";
-       //
-       // Это не бинарное выражение присваивания, это объявление переменной
-       // поэтому это должен быть отдельный узел.
-        return parse_var_assign(std::shared_ptr<expression_node>(new variable_node(variable)));
+        token assignment = require({_token_type_list.at("assign")});
+        return std::shared_ptr<expression_node>(new variable_declaration(current, std::make_shared<variable_node>(variable), parse_formula()));
     } else if (current.type.name == "variable") {
         if (_defined_variables.find(current.value) != _defined_variables.end() &&
             !_defined_variables.at(current.value)) {
@@ -38,7 +33,7 @@ std::shared_ptr<expression_node> parser::parse_expression() {
         }
     } else {
         _src.dec();
-        auto function_node = parse_formula_or_function();
+        auto function_node = parse_function();
         return function_node;
     }
 }
@@ -46,22 +41,13 @@ std::shared_ptr<expression_node> parser::parse_expression() {
 std::shared_ptr<expression_node> parser::parse_var_assign(const std::shared_ptr<expression_node> &variable_node) {
     auto var_name = dynamic_cast<struct variable_node *>(variable_node.get())->variable.value;
     token assignment = require({_token_type_list.at("assign")});
-    auto right_formula = parse_formula_or_function();
+    auto right_formula = parse_formula();
     return std::shared_ptr<expression_node>(new binary_operation_node(assignment, variable_node, right_formula));
 }
 
-// Судя по всему из-за того, что функция почему-то не считается частью формулы
-// невозможно написать выражение вида:
-//    input() + 100;
-// Что является валидным выражением, так как вызов функции в язык программирования
-// это выражение.
-std::shared_ptr<expression_node> parser::parse_formula_or_function() {
-    auto current = match({_token_type_list.at("function")});
-    if (current) {
-        return std::shared_ptr<expression_node>(new function_call(current.value(), parse_function_args(current.value())));
-    } else {
-        return parse_formula();
-    }
+std::shared_ptr<expression_node> parser::parse_function() {
+    auto current = require({_token_type_list.at("function")});
+    return std::shared_ptr<expression_node>(new function_call(current, parse_function_args(current)));
 }
 
 std::vector<std::shared_ptr<expression_node>> parser::parse_function_args(const token & function) {
@@ -81,6 +67,14 @@ std::shared_ptr<expression_node> parser::parse_brackets() {
         std::shared_ptr<expression_node> expr = parse_formula();
         require({_token_type_list.at("rbracket")});
         return expr;
+    } else if (match({_token_type_list.at("function")})) {
+        _src.dec();
+        auto func = parse_function();
+        std::string func_name = dynamic_cast<struct function_call *>(func.get())->function.value;
+        if (!_function_value.at(func_name)) {
+            throw compile_exception(func_name + " hasn't return type");
+        }
+        return func;
     } else {
         return parse_factor();
     }
@@ -136,19 +130,17 @@ token parser::require(const std::vector<token_type> &expected) {
 
 void parser::generate_exception(const std::vector<token_type> &expected) {
     std::string error_command;
-    int64_t count = 0;
-    while (_src.has_prev() && _src.look_back().type != _token_type_list.at("semicolon")) {
+    uint32_t token_pos = _src.pos();
+    while (_src.has_prev()) {
         _src.dec();
-        count++;
     }
-    for (int64_t i = 0; i < count; ++i) {
-        error_command += _src.next().value + " ";
+    uint32_t char_pos = 1;
+    for (uint32_t i = 0; i < token_pos; ++i) {
+        auto t = _src.next();
+        error_command += std::string(t.pos - char_pos, ' ') + t.value;
+        char_pos = t.pos + t.value.size();
     }
     std::ostringstream oss;
     std::copy(expected.begin(), expected.end(), std::ostream_iterator<token_type>(oss, "or "));
-
-    // Здесь немного не аккуратно сделано, поэтому появляются пробелы где не надо.
-    //   val numberString = input ( 20 ) expected semicolon
-    // Хранение позиций решило бы эту проблему.
-    throw compile_exception("In command\n" + error_command + "expected " + oss.str().substr(0, oss.str().size() - 3));
+    throw compile_exception("In command\n" + error_command + " expected " + oss.str().substr(0, oss.str().size() - 3));
 }

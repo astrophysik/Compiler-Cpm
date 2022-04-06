@@ -47,3 +47,11 @@ struct function_call : expression_node {
 
     function_call(token func, std::vector<std::shared_ptr<expression_node>> _args);
 };
+
+struct variable_declaration : expression_node {
+    token modifer;
+    std::shared_ptr<variable_node> variable;
+    std::shared_ptr<expression_node> value;
+
+    variable_declaration(token mod, std::shared_ptr<variable_node> var, std::shared_ptr<expression_node> val);
+};

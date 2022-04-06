@@ -28,7 +28,8 @@ struct token_type {
 struct token {
     std::string value;
     token_type type;
+    uint32_t pos;
 
-    token(std::string _value, token_type _type)
-        : value(std::move(_value)), type(std::move(_type)) {}
+    token(std::string _value, token_type _type, uint32_t p)
+        : value(std::move(_value)), type(std::move(_type)), pos(p) {}
 };

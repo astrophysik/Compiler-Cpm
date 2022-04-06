@@ -3,8 +3,9 @@
 #include <memory>
 
 compiler::compiler(const std::map<std::string, token_type> &token_type_list,
-                   const std::set<char> &special_symbols, const std::map<std::string, uint16_t> &functions_arity)
-    : _lxr(token_type_list, special_symbols), _prs(token_type_list, functions_arity) {}
+                   const std::set<char> &special_symbols, const std::map<std::string, uint16_t> &functions_arity,
+                   const std::map<std::string, bool> & function_value)
+    : _lxr(token_type_list, special_symbols), _prs(token_type_list, functions_arity, function_value) {}
 
 void compiler::compile(const std::string &input, const std::string &output, const std::string &cpp_compiler) {
     _lxr.open(input);

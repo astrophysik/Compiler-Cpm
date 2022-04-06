@@ -13,4 +13,8 @@ string_node::string_node(token str) : string(std::move(str)) {}
 binary_operation_node::binary_operation_node(token op, std::shared_ptr<expression_node> lft, std::shared_ptr<expression_node> rht)
     : op(std::move(op)), left(std::move(lft)), right(std::move(rht)) {}
 
-function_call::function_call(token func, std::vector<std::shared_ptr<expression_node>> _args) : function(std::move(func)), args(std::move(_args)) {}
+function_call::function_call(token func, std::vector<std::shared_ptr<expression_node>> _args)
+    : function(std::move(func)), args(std::move(_args)) {}
+
+variable_declaration::variable_declaration(token mod, std::shared_ptr<variable_node> var, std::shared_ptr<expression_node> val)
+    : modifer(std::move(mod)), variable(std::move(var)), value(std::move(val)) {}

@@ -70,7 +70,8 @@ int main(int argc, char *argv[]) {
                                                              {"semicolon", token_type("semicolon", "[;]")}};
         std::set<char> special_symbols = {'=', '+', '-', ';', '(', ')', ' ', '\n', '\t'};
         std::map<std::string, uint16_t> functions_arity = {{"print", 1}, {"input", 0}};
-        compiler cmp(token_type_list, special_symbols, functions_arity);
+        std::map<std::string, bool> function_value = {{"print", 0}, {"input", 1}};
+        compiler cmp(token_type_list, special_symbols, functions_arity, function_value);
         cmp.compile(argv[1], output_file, cpp_compiler);
     } catch (compile_exception &e) {
         std::cerr << e.what();

@@ -17,6 +17,8 @@ std::string translator::command_translate(expression_node *node) {
         }
         command += ")";
         return command;
+    } else if (auto *d = dynamic_cast<variable_declaration *>(node)) {
+        return d->modifer.value + " " + d->variable->variable.value + " = " + command_translate(d->value.get()) + ";";
     }
     throw compile_exception("Undefined pointer");
 }

@@ -7,42 +7,47 @@
 
 class parser {
     class token_buffer {
-        std::vector<token> buffer;
-        int64_t pos;
+        std::vector<token> _buffer;
+        uint32_t _pos;
 
     public:
         token_buffer() = default;
 
-        token_buffer(std::vector<token> buf) : buffer(std::move(buf)), pos(0) {}
+        token_buffer(std::vector<token> buf) : _buffer(std::move(buf)), _pos(0) {}
 
         void open(std::vector<token> buf) {
-            buffer = std::move(buf);
-            pos = 0;
+            _buffer = std::move(buf);
+            _pos = 0;
         }
 
         bool has_next() const {
-            return pos < buffer.size();
+            return _pos < _buffer.size();
         }
 
         bool has_prev() const {
-            return pos > 0;
+            return _pos > 0;
         }
 
         token next() {
-            return buffer[pos++];
+            return _buffer[_pos++];
         }
 
         token look_back() {
-            return buffer[pos - 1];
+            return _buffer[_pos - 1];
         }
 
         void dec() {
-            pos--;
+            _pos--;
+        }
+
+        uint32_t pos() {
+            return _pos;
         }
     };
 
     std::map<std::string, token_type> _token_type_list;
     std::map<std::string, uint16_t> _operators_arity;
+    std::map<std::string, bool> _function_value;
     std::map<std::string, bool> _defined_variables;
     token_buffer _src;
 
@@ -56,7 +61,7 @@ class parser {
 
     std::shared_ptr<expression_node> parse_var_assign(const std::shared_ptr<expression_node> &variable_node);
 
-    std::shared_ptr<expression_node> parse_formula_or_function();
+    std::shared_ptr<expression_node> parse_function();
 
     std::vector<std::shared_ptr<expression_node>> parse_function_args(const token & function);
 
@@ -67,7 +72,7 @@ class parser {
     std::shared_ptr<expression_node> parse_factor();
 
 public:
-    parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity);
+    parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity, std::map<std::string, bool> function_value);
 
     std::shared_ptr<expression_node> parse_statement(std::vector<token> tokens);
 };

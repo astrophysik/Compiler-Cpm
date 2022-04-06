@@ -64,9 +64,7 @@ std::optional<token> lexer::next_token() {
             current += ch;
             ch = _source.next();
             if (!is_string && _special_symbols.find(ch) != _special_symbols.end()) {
-                if (ch != ' ' && ch != '\n' && ch != '\t') {
-                    _source.back();
-                }
+                _source.back();
                 break;
             }
             if (is_string && ch == '\"') {
@@ -76,7 +74,7 @@ std::optional<token> lexer::next_token() {
         }
     } else {
         if (ch != ' ' && ch != '\n' && ch != '\t') {
-            current = {ch};
+            current += ch;
         }
     }
     auto it = std::find_if(_token_type_list.begin(), _token_type_list.end(), [&current](const auto &type) {
@@ -85,5 +83,5 @@ std::optional<token> lexer::next_token() {
     if (it == _token_type_list.end()) {
         throw compile_exception("\n" + std::to_string(_source.lines_pos()) + " | Invalid language token '" + current + "'\n");
     }
-    return {token(current, it->second)};
+    return {token(current, it->second, _source.char_pos() - current.size() + 1)};
 }

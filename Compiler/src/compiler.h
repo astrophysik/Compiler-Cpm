@@ -32,8 +32,8 @@ class compiler {
     void check_exception();
 
 public:
-    compiler(const std::map<std::string, token_type> &token_type_list,
-             const std::set<char> &special_symbols, const std::map<std::string, uint16_t> &functions_arity);
+    compiler(const std::map<std::string, token_type> &token_type_list,const std::set<char> &special_symbols,
+             const std::map<std::string, uint16_t> &functions_arity, const std::map<std::string, bool> &function_value);
 
     void compile(const std::string &input, const std::string &output, const std::string &cpp_compiler);
 };
