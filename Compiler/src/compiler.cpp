@@ -7,7 +7,7 @@ compiler::compiler(const std::map<std::string, token_type> &token_type_list,
                    const std::map<std::string, bool> & function_value)
     : _lxr(token_type_list, special_symbols), _prs(token_type_list, functions_arity, function_value) {}
 
-void compiler::compile(const std::string &input, const std::string &output, const std::string &cpp_compiler) {
+void compiler::compile(const std::string &input, const std::string &output, const std::string &cpp_compiler, bool translate_only) {
     _lxr.open(input);
     std::thread lexer_worker(&compiler::lexer_thread, this);
     std::shared_ptr<statement_node> root = std::make_shared<statement_node>();
@@ -17,7 +17,9 @@ void compiler::compile(const std::string &input, const std::string &output, cons
     check_exception();
     translator::generate_cpp_code(root, "#include \"" + std::filesystem::current_path().parent_path().string() +
                                                 path_separator + "Compiler" + path_separator + "helpers" + path_separator + "mixed.h\"");
-    run(output, cpp_compiler);
+    if (!translate_only) {
+        run(output, cpp_compiler);
+    }
 }
 
 void compiler::run(const std::string &output, const std::string &cpp_compiler) {

@@ -19,6 +19,15 @@ std::string translator::command_translate(expression_node *node) {
         return command;
     } else if (auto *d = dynamic_cast<variable_declaration *>(node)) {
         return d->modifer.value + " " + d->variable->variable.value + " = " + command_translate(d->value.get()) + ";";
+    } else if (auto *ffi = dynamic_cast<ffi_func_decl *>(node)) {
+        std::string args;
+        for (auto &elem : ffi->args) {
+            args += elem->arg_type->ctype.value + " " + elem->arg_name->variable.value + ",";
+        }
+        if (!args.empty()) {
+            args.pop_back();
+        }
+        return ffi->return_type->ctype.value + " " + ffi->func_name->variable.value + "(" + args + ")";
     }
     throw compile_exception("Undefined pointer");
 }
