@@ -16,7 +16,8 @@ std::shared_ptr<expression_node> parser::parse_statement(std::vector<token> toke
 
 std::shared_ptr<expression_node> parser::parse_expression() {
     std::vector<token_type> expected = {_token_type_list.at("modifier"), _token_type_list.at("variable"),
-                                        _token_type_list.at("function"), _token_type_list.at("ctype")};
+                                        _token_type_list.at("function"), _token_type_list.at("ctype"),
+                                        _token_type_list.at("number")};
     auto current = require(expected);
     if (current.type.name == "modifier") {
         token variable = require({_token_type_list.at("variable")});
@@ -32,7 +33,8 @@ std::shared_ptr<expression_node> parser::parse_expression() {
             !_defined_variables.at(current.value)) {
             _src.dec();
             return parse_var_assign(parse_factor());
-        } else if (!_defined_variables.at(current.value)) {
+        } else if (_defined_variables.find(current.value) != _defined_variables.end() &&
+                   _defined_variables.at(current.value)) {
             throw compile_exception(
                     "You cannot modify variable \"" + current.value + "\" because its was declared as const");
         } else {
@@ -44,7 +46,11 @@ std::shared_ptr<expression_node> parser::parse_expression() {
         auto args = parse_ffi_args();
         require({_token_type_list.at("rbracket")});
         return std::shared_ptr<expression_node>(
-                new ffi_func_decl(std::make_shared<ctype_node>(current), std::make_shared<variable_node>(func_name),args));
+                new ffi_func_decl(std::make_shared<ctype_node>(current), std::make_shared<variable_node>(func_name),
+                                  args));
+    } else if (current.type.name == "number") {
+        _src.dec();
+        return parse_formula();
     } else {
         _src.dec();
         auto function_node = parse_function();

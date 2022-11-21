@@ -27,5 +27,7 @@ public:
 
     void open(const std::string &file_name);
 
+    void close();
+
     std::vector<token> next_command();
 };

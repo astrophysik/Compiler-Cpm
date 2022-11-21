@@ -15,6 +15,7 @@ void compiler::compile(const std::string &input, const std::string &output, cons
     lexer_worker.join();
     parser_worker.join();
     check_exception();
+    _lxr.close();
     translator::generate_cpp_code(root, "#include \"" + std::filesystem::current_path().parent_path().string() +
                                                 path_separator + "Compiler" + path_separator + "helpers" + path_separator + "mixed.h\"");
     if (!translate_only) {

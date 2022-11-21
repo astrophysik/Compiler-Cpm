@@ -7,6 +7,10 @@ void lexer::open(const std::string &file_name) {
     _source.open(file_name);
 }
 
+void lexer::close() {
+    _source.close();
+}
+
 std::vector<token> lexer::next_command() {
     std::vector<token> tokens;
     for (auto item = next_token(); item.has_value(); item = next_token()) {
