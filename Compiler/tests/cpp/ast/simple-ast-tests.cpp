@@ -78,8 +78,6 @@ TEST(SimpleAstTests, ast_base_test) {
     auto *d = dynamic_cast<number_node *>(root->expressions.begin()->get());
     ASSERT_TRUE(d);
     ASSERT_EQ(d->number.value, "42.42");
-
-
 }
 
 TEST(SimpleAstTests, ast_operation_test) {
@@ -147,6 +145,73 @@ TEST(SimpleAstTests, ast_variable_test) {
           "a = 42;"
           "var b = a;"
           "b = \"4242\";";
+    ASSERT_FALSE(is_err(src));
+}
+
+TEST(SimpleAstTests, ast_function_test) {
+    std::shared_ptr<statement_node> root;
+    std::string src;
+
+    src = "print(\"Hello, World!\");";
+    root = parse_to_ast(src);
+
+    auto *f = dynamic_cast<function_call *>(root->expressions.begin()->get());
+    ASSERT_TRUE(f);
+    auto *arg = dynamic_cast<string_node *>(f->args.begin()->get());
+    ASSERT_TRUE(arg);
+
+    ASSERT_EQ(f->function.value, "print");
+    ASSERT_EQ(arg->string.value, "\"Hello, World!\"");
+
+
+    src = "input(\"Hello, Me\");";
+    root = parse_to_ast(src);
+    f = dynamic_cast<function_call *>(root->expressions.begin()->get());
+    ASSERT_TRUE(f);
+    arg = dynamic_cast<string_node *>(f->args.begin()->get());
+    ASSERT_TRUE(arg);
+
+    ASSERT_EQ(f->function.value, "input");
+    ASSERT_EQ(arg->string.value, "\"Hello, Me\"");
+}
+
+TEST(SimpleAstTests, ast_errors_test) {
+    std::shared_ptr<statement_node> root;
+    std::string src;
+
+    src = "1";
+    ASSERT_TRUE(is_err(src));
+
+    src = "a;";
+    ASSERT_TRUE(is_err(src));
+
+    src = "val a = 1 * 1;";
+    ASSERT_TRUE(is_err(src));
+
+    src = "val a = print(1);";
+    ASSERT_TRUE(is_err(src));
+
+    src = "print();";
+    ASSERT_TRUE(is_err(src));
+}
+
+TEST(SimpleAstTests, ast_code_test) {
+    std::string src;
+
+    src = "val a = input(\"What is your name?\n\");"
+          "print(\"Hello, \" + a);";
+    ASSERT_FALSE(is_err(src));
+
+    src = "val a = input(\"first : \");"
+          "val b = input(\"second : \");"
+          "val c = input(\"third : \");"
+          "print(\"perimetr is : \");"
+          "print(a + b + c);";
+    ASSERT_FALSE(is_err(src));
+
+    src = "val me_ = input(\"What is your name?\");"
+          "val friend4242_my_best_11 = input(\"What is your friend's name?\");"
+          "print(me_ + \" and \" + friend4242_my_best_11 + \" are friends!\");";
     ASSERT_FALSE(is_err(src));
 }
 
