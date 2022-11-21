@@ -176,7 +176,6 @@ TEST(SimpleAstTests, ast_function_test) {
 }
 
 TEST(SimpleAstTests, ast_errors_test) {
-    std::shared_ptr<statement_node> root;
     std::string src;
 
     src = "1";
@@ -215,6 +214,47 @@ TEST(SimpleAstTests, ast_code_test) {
     ASSERT_FALSE(is_err(src));
 }
 
+TEST(SimpleAstTests, ast_ffi_test) {
+    std::shared_ptr<statement_node> root;
+    std::string src;
 
+    src = "dsf f();";
+    ASSERT_TRUE(is_err(src));
 
+    src = "f();";
+    ASSERT_TRUE(is_err(src));
 
+    src = "int f(,);";
+    ASSERT_TRUE(is_err(src));
+
+    src = "int f(error);";
+    ASSERT_TRUE(is_err(src));
+
+    src = "void f();";
+    root = parse_to_ast(src);
+
+    auto *decl = dynamic_cast<ffi_func_decl *>(root->expressions.begin()->get());
+    ASSERT_TRUE(decl);
+    auto *return_type = decl->return_type.get();
+    auto *func_name = decl->func_name.get();
+    auto args = decl->args;
+    ASSERT_EQ(return_type->ctype.value, "void");
+    ASSERT_EQ(func_name->variable.value, "f");
+    ASSERT_TRUE(args.empty());
+
+    src = "double func_name111___(int c, char _gGggaa123);";
+    root = parse_to_ast(src);
+
+    decl = dynamic_cast<ffi_func_decl *>(root->expressions.begin()->get());
+    ASSERT_TRUE(decl);
+    return_type = decl->return_type.get();
+    func_name = decl->func_name.get();
+    args = decl->args;
+    ASSERT_EQ(return_type->ctype.value, "double");
+    ASSERT_EQ(func_name->variable.value, "func_name111___");
+    ASSERT_EQ(args.size(), 2);
+    ASSERT_EQ(args.begin()->get()->arg_type->ctype.value, "int");
+    ASSERT_EQ(args.begin()->get()->arg_name->variable.value, "c");
+    ASSERT_EQ((++args.begin())->get()->arg_type->ctype.value, "char");
+    ASSERT_EQ((++args.begin())->get()->arg_name->variable.value, "_gGggaa123");
+}

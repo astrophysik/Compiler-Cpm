@@ -62,6 +62,7 @@ std::list<std::shared_ptr<ffi_arg>> parser::parse_ffi_args() {
     std::vector<token_type> expected = {_token_type_list.at("ctype"), _token_type_list.at("rbracket")};
     auto current = require(expected);
     if (current.type.name == "rbracket") {
+        _src.dec();
         return {};
     }
     _src.dec();

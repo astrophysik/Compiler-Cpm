@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
                 return 0;
             } else if (strlen(argv[i]) > 5 && argv[i][1] == 'c' && argv[i][2] == 'm' && argv[i][3] == 'p' && argv[i][4] == '=') {
                 cpp_compiler = std::string((argv[i] + 5));
-            } else if (strlen(argv[i]) > 1 && argv[i][1] == 'o') {
+            } else if (strlen(argv[i]) > 2 && argv[i][1] == 'o') {
                 output_file = std::string(argv[++i]);
             } else if (strlen(argv[i]) == 2 && argv[i][1] == 'S') {
                 translate_only = true;
