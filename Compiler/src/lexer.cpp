@@ -31,6 +31,7 @@ void lexer::skip_white_space() {
         }
     }
 }
+/* */
 
 void lexer::skip_comment() {
     if (_source.next() != '/') {
@@ -38,14 +39,11 @@ void lexer::skip_comment() {
         return;
     }
     char ch = _source.next();
-    if (ch == '/') {
-        go_to_enter();
-    } else {
-        size_t pos = _source.lines_pos();
-        if (ch == '\n') {
-            pos--;
+    if (ch == '*') {
+        ch = _source.next();
+        while (!(ch == '*' && _source.next() == '/')) {
+            ch = _source.next();
         }
-        throw compile_exception("\n" + std::to_string(pos) + " | One slash instead of two expected\n");
     }
 }
 
@@ -87,5 +85,19 @@ std::optional<token> lexer::next_token() {
     if (it == _token_type_list.end()) {
         throw compile_exception("\n" + std::to_string(_source.lines_pos()) + " | Invalid language token '" + current + "'\n");
     }
-    return {token(current, it->second, _source.char_pos() - current.size() + 1)};
+    token tkn = token(current, it->second, _source.char_pos() - current.size() + 1);
+    /*hack for c type*/
+    if (it->second.name == "ctype") {
+        while (_source.has_next()) {
+            skip_white_space();
+            ch = _source.next();
+            if (ch == '*') {
+                tkn.value += ch;
+            } else {
+                _source.back();
+                break;
+            }
+        }
+    }
+    return {tkn};
 }

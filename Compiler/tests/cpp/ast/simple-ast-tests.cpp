@@ -257,4 +257,23 @@ TEST(SimpleAstTests, ast_ffi_test) {
     ASSERT_EQ(args.begin()->get()->arg_name->variable.value, "c");
     ASSERT_EQ((++args.begin())->get()->arg_type->ctype.value, "char");
     ASSERT_EQ((++args.begin())->get()->arg_name->variable.value, "_gGggaa123");
+
+    src = "int memcpy(void ** dst, void              "
+          "***      src,                 int    \tn);";
+    root = parse_to_ast(src);
+
+    decl = dynamic_cast<ffi_func_decl *>(root->expressions.begin()->get());
+    ASSERT_TRUE(decl);
+    return_type = decl->return_type.get();
+    func_name = decl->func_name.get();
+    args = decl->args;
+    ASSERT_EQ(return_type->ctype.value, "int");
+    ASSERT_EQ(func_name->variable.value, "memcpy");
+    ASSERT_EQ(args.size(), 3);
+    ASSERT_EQ(args.begin()->get()->arg_type->ctype.value, "void**");
+    ASSERT_EQ(args.begin()->get()->arg_name->variable.value, "dst");
+    ASSERT_EQ((++args.begin())->get()->arg_type->ctype.value, "void***");
+    ASSERT_EQ((++args.begin())->get()->arg_name->variable.value, "src");
+    ASSERT_EQ((++++args.begin())->get()->arg_type->ctype.value, "int");
+    ASSERT_EQ((++++args.begin())->get()->arg_name->variable.value, "n");
 }

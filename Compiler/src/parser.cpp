@@ -71,14 +71,17 @@ std::list<std::shared_ptr<ffi_arg>> parser::parse_ffi_args() {
 
 std::list<std::shared_ptr<ffi_arg>> parser::parse_ffi_non_empty_args() {
     auto arg_type = require({_token_type_list.at("ctype")});
-    auto arg_name = require({_token_type_list.at("variable")});
+    auto arg_name = match({_token_type_list.at("variable")});
+    if (!arg_name) {
+        arg_name = token("", _token_type_list.at("variable"), arg_type.pos + 1);
+    }
     auto comma = match({_token_type_list.at("comma")});
     std::list<std::shared_ptr<ffi_arg>> tail;
     if (comma) {
         tail = parse_ffi_non_empty_args();
     }
     auto head = std::make_shared<ffi_arg>(
-            std::make_shared<ctype_node>(arg_type), std::make_shared<variable_node>(arg_name));
+            std::make_shared<ctype_node>(arg_type), std::make_shared<variable_node>(arg_name.value()));
     tail.push_front(head);
     return tail;
 }

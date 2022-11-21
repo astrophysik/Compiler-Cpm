@@ -30,7 +30,7 @@ void char_source::back() {
 }
 
 bool char_source::has_next() {
-    return _ifstream && _ifstream.peek() != EOF;
+    return _ifstream && !_ifstream.eof();
 }
 
 uint32_t char_source::char_pos() {
