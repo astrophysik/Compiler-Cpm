@@ -1,7 +1,6 @@
 #pragma once
 
 #include <utility>
-#include <list>
 
 #include "../AST/ast_nodes.h"
 #include "lexer.h"
@@ -60,15 +59,11 @@ class parser {
 
     std::shared_ptr<expression_node> parse_expression();
 
-    std::list<std::shared_ptr<ffi_arg>> parse_ffi_args();
-
-    std::list<std::shared_ptr<ffi_arg>> parse_ffi_non_empty_args();
-
     std::shared_ptr<expression_node> parse_var_assign(const std::shared_ptr<expression_node> &variable_node);
 
     std::shared_ptr<expression_node> parse_function();
 
-    std::vector<std::shared_ptr<expression_node>> parse_function_arg(const token & function);
+    std::vector<std::shared_ptr<expression_node>> parse_function_args(const token & function);
 
     std::shared_ptr<expression_node> parse_brackets();
 

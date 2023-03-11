@@ -18,19 +18,12 @@ void char_source::open(const std::string &file_name) {
     }
 }
 
-void char_source::close() {
-    if (_ifstream.is_open()) {
-        _ifstream.close();
-    }
-    _number_of_lines = 1;
-}
-
 void char_source::back() {
     _ifstream.unget();
 }
 
 bool char_source::has_next() {
-    return _ifstream && !_ifstream.eof();
+    return _ifstream && _ifstream.peek() != EOF;
 }
 
 uint32_t char_source::char_pos() {

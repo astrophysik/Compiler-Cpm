@@ -1,11 +1,7 @@
 #include "parser.h"
 
-#include <memory>
-
-parser::parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity,
-               std::map<std::string, bool> function_value)
-        : _token_type_list(std::move(types)), _operators_arity(std::move(arity)),
-          _function_value(std::move(function_value)) {}
+parser::parser(std::map<std::string, token_type> types, std::map<std::string, uint16_t> arity, std::map<std::string, bool> function_value)
+    : _token_type_list(std::move(types)), _operators_arity(std::move(arity)), _function_value(std::move(function_value)) {}
 
 std::shared_ptr<expression_node> parser::parse_statement(std::vector<token> tokens) {
     _src.open(std::move(tokens));
@@ -15,9 +11,7 @@ std::shared_ptr<expression_node> parser::parse_statement(std::vector<token> toke
 }
 
 std::shared_ptr<expression_node> parser::parse_expression() {
-    std::vector<token_type> expected = {_token_type_list.at("modifier"), _token_type_list.at("variable"),
-                                        _token_type_list.at("function"), _token_type_list.at("ctype"),
-                                        _token_type_list.at("number")};
+    std::vector<token_type> expected = {_token_type_list.at("modifier"), _token_type_list.at("variable"), _token_type_list.at("function")};
     auto current = require(expected);
     if (current.type.name == "modifier") {
         token variable = require({_token_type_list.at("variable")});
@@ -26,64 +20,22 @@ std::shared_ptr<expression_node> parser::parse_expression() {
         }
         _defined_variables.insert({variable.value, current.value == "val"});
         token assignment = require({_token_type_list.at("assign")});
-        return std::shared_ptr<expression_node>(
-                new variable_declaration(current, std::make_shared<variable_node>(variable), parse_formula()));
+        return std::shared_ptr<expression_node>(new variable_declaration(current, std::make_shared<variable_node>(variable), parse_formula()));
     } else if (current.type.name == "variable") {
         if (_defined_variables.find(current.value) != _defined_variables.end() &&
             !_defined_variables.at(current.value)) {
             _src.dec();
             return parse_var_assign(parse_factor());
-        } else if (_defined_variables.find(current.value) != _defined_variables.end() &&
-                   _defined_variables.at(current.value)) {
-            throw compile_exception(
-                    "You cannot modify variable \"" + current.value + "\" because its was declared as const");
+        } else if (!_defined_variables.at(current.value)) {
+            throw compile_exception("You cannot modify variable \"" + current.value + "\" because its was declared as const");
         } else {
             throw compile_exception("You cannot use variable \"" + current.value + "\" before its declaration");
         }
-    } else if (current.type.name == "ctype") {
-        token func_name = require({_token_type_list.at("variable")});
-        require({_token_type_list.at("lbracket")});
-        auto args = parse_ffi_args();
-        require({_token_type_list.at("rbracket")});
-        return std::shared_ptr<expression_node>(
-                new ffi_func_decl(std::make_shared<ctype_node>(current), std::make_shared<variable_node>(func_name),
-                                  args));
-    } else if (current.type.name == "number") {
-        _src.dec();
-        return parse_formula();
     } else {
         _src.dec();
         auto function_node = parse_function();
         return function_node;
     }
-}
-
-std::list<std::shared_ptr<ffi_arg>> parser::parse_ffi_args() {
-    std::vector<token_type> expected = {_token_type_list.at("ctype"), _token_type_list.at("rbracket")};
-    auto current = require(expected);
-    if (current.type.name == "rbracket") {
-        _src.dec();
-        return {};
-    }
-    _src.dec();
-    return parse_ffi_non_empty_args();
-}
-
-std::list<std::shared_ptr<ffi_arg>> parser::parse_ffi_non_empty_args() {
-    auto arg_type = require({_token_type_list.at("ctype")});
-    auto arg_name = match({_token_type_list.at("variable")});
-    if (!arg_name) {
-        arg_name = token("", _token_type_list.at("variable"), arg_type.pos + 1);
-    }
-    auto comma = match({_token_type_list.at("comma")});
-    std::list<std::shared_ptr<ffi_arg>> tail;
-    if (comma) {
-        tail = parse_ffi_non_empty_args();
-    }
-    auto head = std::make_shared<ffi_arg>(
-            std::make_shared<ctype_node>(arg_type), std::make_shared<variable_node>(arg_name.value()));
-    tail.push_front(head);
-    return tail;
 }
 
 std::shared_ptr<expression_node> parser::parse_var_assign(const std::shared_ptr<expression_node> &variable_node) {
@@ -95,10 +47,10 @@ std::shared_ptr<expression_node> parser::parse_var_assign(const std::shared_ptr<
 
 std::shared_ptr<expression_node> parser::parse_function() {
     auto current = require({_token_type_list.at("function")});
-    return std::shared_ptr<expression_node>(new function_call(current, parse_function_arg(current)));
+    return std::shared_ptr<expression_node>(new function_call(current, parse_function_args(current)));
 }
 
-std::vector<std::shared_ptr<expression_node>> parser::parse_function_arg(const token &function) {
+std::vector<std::shared_ptr<expression_node>> parser::parse_function_args(const token & function) {
     require({_token_type_list.at("lbracket")});
     std::vector<std::shared_ptr<expression_node>> args;
     while (!match({_token_type_list.at("rbracket")})) {
@@ -151,8 +103,7 @@ std::shared_ptr<expression_node> parser::parse_factor() {
     } else if (current.type.name == "string") {
         return std::shared_ptr<expression_node>(new string_node(current));
     } else {
-        generate_exception(
-                {_token_type_list.at("number"), _token_type_list.at("string"), _token_type_list.at("variable")});
+        generate_exception({_token_type_list.at("number"), _token_type_list.at("string"), _token_type_list.at("variable")});
         return {};
     }
 }

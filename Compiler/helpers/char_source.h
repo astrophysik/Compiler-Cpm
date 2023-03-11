@@ -12,8 +12,6 @@ struct char_source {
 
     void open(const std::string &file_name);
 
-    void close();
-
     void back();
 
     bool has_next();
